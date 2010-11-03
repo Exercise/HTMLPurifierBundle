@@ -6,7 +6,7 @@ Installation
           $ git submodule add git@github.com:Exercise/HTMLPurifierBundle.git src/Bundle/ExerciseCom/HTMLPurifierBundle
           $ git submodule add git://github.com/ezyang/htmlpurifier.git src/vendor/htmlpurifier
 
-  2. Add the `Facebook` class to your project's autoloader bootstrap script:
+  2. Add the `HTMLPurifier.auto.php` class to your project's autoloader bootstrap script:
 
           // src/autoload.php
           spl_autoload_register(function($class) {
@@ -28,7 +28,7 @@ Installation
               );
           }
 
-  4. Configure the `facebook` service in your config:
+  4. Configure the `htmlpurifier` service in your config:
 
           # application/config/config.yml
           htmlpurifier.config:
