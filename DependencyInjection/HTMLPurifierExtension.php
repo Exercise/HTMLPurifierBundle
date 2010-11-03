@@ -14,7 +14,7 @@ class HTMLPurifierExtension extends Extension
 
     public function apiLoad($config, ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('kris.facebook')) {
+        if (!$container->hasDefinition('htmlpurifier')) {
             $this->loadDefaults($container);
         }
 
@@ -29,20 +29,14 @@ class HTMLPurifierExtension extends Extension
         }
     }
 
-    /**
-     * @codeCoverageIgnore
-     */
     public function getAlias()
     {
         return 'htmlpurifier';
     }
 
-    /**
-     * @codeCoverageIgnore
-     */
     protected function loadDefaults($container)
     {
         $loader = new XmlFileLoader($container, __DIR__.'/../Resources/config');
-        $loader->load($this->resources['facebook']);
+        $loader->load($this->resources['htmlpurifier']);
     }
 }
