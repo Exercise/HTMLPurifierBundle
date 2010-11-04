@@ -5,20 +5,20 @@
     xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
 
   <parameters>
+    <parameter key="htmlpurifier.class">Bundle\ExerciseCom\HTMLPurifierBundle\HTMLPurifier</parameter>
     <parameter key="htmlpurifier.allowed_html">null</parameter>
     <parameter key="htmlpurifier.base_uri">null</parameter>
     <parameter key="htmlpurifier.absolute_uri">null</parameter>
     <parameter key="htmlpurifier.namespace">Bundle\Exercisecom\HTMLPurifierBundle</parameter>
+
+    <parameter key="htmlpurifier.options" type="collection">
+        <parameter key="cache_dir">%kernel.root_dir%/cache/htmlpurifier</parameter>
+    </parameter>
+
   </parameters>
 
   <services>
     <service id="htmlpurifier" class="%htmlpurifier.class%">
-      <argument type="collection">
-        <argument key="allowed_html">%htmlpurifier.allowed_html%</argument>
-        <argument key="base_uri">%htmlpurifier.base_uri%</argument>
-        <argument key="absolute_uri">%htmlpurifier.absolute_uri%</argument>
-        <argument key="namespace">%htmlpurifier.namespace%</argument>
-      </argument>
     </service>
   </services>
 </container>
