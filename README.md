@@ -30,17 +30,4 @@ Installation
 
   4. Configure the `htmlpurifier` service in your config:
 
-          # application/config/config.yml
-          htmlpurifier.config:
-            allowed_html:
-            base_uri:
-            absolute_uri: false
-            namespace: Bundle\Exercisecom\HTMLPurifierBundle
-
-          # application/config/config.xml
-          <htmlpurifier:config
-            allowed_html=""
-            base_uri=""
-            absolute_uri="false"
-            namespace="Bundle\Exercisecom\HTMLPurifierBundle"
-          />
+          htmlpurifier.config: ~
