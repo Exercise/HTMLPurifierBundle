@@ -11,7 +11,7 @@ Installation
           // src/autoload.php
           spl_autoload_register(function($class) {
               if ('HTMLPurifier_Config' == $class) {
-                  require_once __DIR__ . '/vender/htmlpurifier/library/HTMLPurifier.auto.php';
+                  require_once __DIR__.'/vendor/htmlpurifier/library/HTMLPurifier.auto.php';
                   return true;
               }
           });
