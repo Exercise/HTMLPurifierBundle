@@ -1,21 +1,15 @@
 <?php
 
-namespace Bundle\ExerciseCom\HTMLPurifier;
+namespace Bundle\ExerciseCom\HTMLPurifierBundle;
 
 class HTMLPurifier
 {
     protected $purifier;
     protected $config;
 
-    protected $options = array(
-        "cache_path" => $this->container->get('kernel.root_dir') . '/cache/htmlpurifier'
-    );
-
     public function __construct(array $options = array())
     {
-        $this->options = array_merge($this->options, $options);
-
-
+        $this->options = $options;
     }
 
     public function purify($data)

@@ -12,7 +12,7 @@ class HTMLPurifierExtension extends Extension
         'htmlpurifier' => 'htmlpurifier.xml',
     );
 
-    public function apiLoad($config, ContainerBuilder $container)
+    public function configLoad($config, ContainerBuilder $container)
     {
         if (!$container->hasDefinition('htmlpurifier')) {
             $this->loadDefaults($container);
@@ -27,6 +27,21 @@ class HTMLPurifierExtension extends Extension
                 $container->setParameter('htmlpurifier.'.$attribute, $config[$attribute]);
             }
         }
+    }
+
+    /**
+     * Returns the base path for the XSD files.
+     *
+     * @return string The XSD base path
+     */
+    public function getXsdValidationBasePath()
+    {
+        return null;
+    }
+
+    public function getNamespace()
+    {
+        return 'http://www.symfony-project.org/schema/dic/symfony';
     }
 
     public function getAlias()
