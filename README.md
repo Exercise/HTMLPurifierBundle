@@ -3,7 +3,7 @@ Installation
 
   1. Add this bundle and the HTMLPurifier to your project as Git submodules:
 
-          $ git submodule add git@github.com:Exercise/HTMLPurifierBundle.git src/Bundle/ExerciseCom/HTMLPurifierBundle
+          $ git submodule add git://github.com/Exercise/HTMLPurifierBundle.git src/Bundle/ExerciseCom/HTMLPurifierBundle
           $ git submodule add git://github.com/ezyang/htmlpurifier.git src/vendor/htmlpurifier
 
   2. Add the `HTMLPurifier` prefix to the src/autoload.php file:
