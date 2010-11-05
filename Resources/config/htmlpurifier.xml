@@ -6,13 +6,13 @@
 
   <parameters>
     <parameter key="htmlpurifier.class">Bundle\ExerciseCom\HTMLPurifierBundle\HTMLPurifier</parameter>
-    <parameter key="htmlpurifier.allowed_html">null</parameter>
-    <parameter key="htmlpurifier.base_uri">null</parameter>
-    <parameter key="htmlpurifier.absolute_uri">null</parameter>
-    <parameter key="htmlpurifier.namespace">Bundle\Exercisecom\HTMLPurifierBundle</parameter>
 
     <parameter key="htmlpurifier.options" type="collection">
         <parameter key="cache_dir">%kernel.root_dir%/cache/htmlpurifier</parameter>
+        <parameter key="enable_youtube">true</parameter>
+        <parameter key="allowed_html">null</parameter>
+        <parameter key="base_uri">null</parameter>
+        <parameter key="absolute_uri">null</parameter>
     </parameter>
 
   </parameters>
