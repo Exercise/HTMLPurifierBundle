@@ -20,7 +20,7 @@ class HTMLPurifier
 
         if(!$this->config) {
             $config = \HTMLPurifier_Config::createDefault();
-            $config->set('Cache.SerializerPath', $this->options['cache_path']);
+            $config->set('Cache.SerializerPath', $this->options['cache_dir']);
 //                $config->set('Filter.YouTube', true);
         }
         $purifier = new \HTMLPurifier($config);

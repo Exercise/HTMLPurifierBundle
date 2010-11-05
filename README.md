@@ -6,15 +6,14 @@ Installation
           $ git submodule add git@github.com:Exercise/HTMLPurifierBundle.git src/Bundle/ExerciseCom/HTMLPurifierBundle
           $ git submodule add git://github.com/ezyang/htmlpurifier.git src/vendor/htmlpurifier
 
-  2. Add the `HTMLPurifier.auto.php` class to your project's autoloader bootstrap script:
+  2. Add the `HTMLPurifier` prefix to the src/autoload.php file:
 
-          // src/autoload.php
-          spl_autoload_register(function($class) {
-              if ('HTMLPurifier_Config' == $class) {
-                  require_once __DIR__.'/vendor/htmlpurifier/library/HTMLPurifier.auto.php';
-                  return true;
-              }
-          });
+        $loader->registerPrefixes(array(
+            // ...
+            'HTMLPurifier'    => __DIR__.'/vendor/htmlpurifier/library',
+            // ...
+        ));
+
 
   3. Add this bundle to your application's kernel:
 
@@ -28,6 +27,11 @@ Installation
               );
           }
 
-  4. Configure the `htmlpurifier` service in your config:
+  4. Create the cache directory at %kernel_dir%/cache/htmlpurifier and create .gitignore file in directory with:
+
+*
+!.gitignore
+
+  5. Enable the `htmlpurifier` service in your config:
 
           htmlpurifier.config: ~

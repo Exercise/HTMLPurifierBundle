@@ -19,6 +19,7 @@
 
   <services>
     <service id="htmlpurifier" class="%htmlpurifier.class%">
+        <argument>%htmlpurifier.options%</argument>
     </service>
   </services>
 </container>
