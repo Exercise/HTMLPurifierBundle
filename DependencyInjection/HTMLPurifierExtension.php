@@ -12,7 +12,14 @@ class HTMLPurifierExtension extends Extension
         'htmlpurifier' => 'htmlpurifier.xml',
     );
 
-    public function configLoad($config, ContainerBuilder $container)
+    public function configLoad(array $configs, ContainerBuilder $container)
+    {
+        foreach ($configs as $config) {
+            $this->doConfigLoad($config, $container);
+        }
+    }
+
+    public function doConfigLoad(array $config, ContainerBuilder $container)
     {
         if (!$container->hasDefinition('htmlpurifier')) {
             $this->loadDefaults($container);
