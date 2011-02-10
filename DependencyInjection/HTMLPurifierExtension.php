@@ -5,6 +5,7 @@ namespace Bundle\ExerciseCom\HTMLPurifierBundle\DependencyInjection;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\FileLocator;
 
 class HTMLPurifierExtension extends Extension
 {
@@ -58,7 +59,7 @@ class HTMLPurifierExtension extends Extension
 
     protected function loadDefaults($container)
     {
-        $loader = new XmlFileLoader($container, __DIR__.'/../Resources/config');
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load($this->resources['htmlpurifier']);
     }
 }
