@@ -13,7 +13,7 @@ class HTMLPurifierExtension extends Extension
         'htmlpurifier' => 'htmlpurifier.xml',
     );
 
-    public function configLoad(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container)
     {
         foreach ($configs as $config) {
             $this->doConfigLoad($config, $container);
@@ -54,7 +54,7 @@ class HTMLPurifierExtension extends Extension
 
     public function getAlias()
     {
-        return 'htmlpurifier';
+        return 'html_purifier';
     }
 
     protected function loadDefaults($container)
