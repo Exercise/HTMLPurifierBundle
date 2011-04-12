@@ -21,6 +21,7 @@ class HTMLPurifier
         if(!$this->config) {
             $this->config = \HTMLPurifier_Config::createDefault();
             $this->config->set('Cache.SerializerPath', $this->options['cache_dir']);
+            $this->config->set('Attr.EnableID', true);
             if(isset($this->options['enable_youtube']) && $this->options['enable_youtube']) {
                 $this->config->set('Filter.YouTube', true);
             }
