@@ -26,12 +26,3 @@ Installation
                   // ...
               );
           }
-
-  4. Create the cache directory at %kernel_dir%/cache/htmlpurifier and create .gitignore file in directory with:
-
-          *
-          !.gitignore
-
-  5. Enable the `htmlpurifier` service in your config:
-
-          htmlpurifier.config: ~
