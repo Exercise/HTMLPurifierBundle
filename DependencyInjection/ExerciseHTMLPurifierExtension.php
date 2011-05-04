@@ -7,11 +7,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+
 
 class ExerciseHTMLPurifierExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('html_purifier.xml');
+
         $processor = new Processor();
         $configuration = new Configuration();
 
@@ -21,7 +27,7 @@ class ExerciseHTMLPurifierExtension extends Extension
             $configServiceId = $this->getAlias().'.config.'.$name;
             $configDefinition = new Definition('HTMLPurifier_Config');
             $configDefinition
-                ->setFactoryClass('HTMLPurifier_Config')
+                ->setFactoryClass('%exercise_html_purifier.config.class%')
                 ->setFactoryMethod('createDefault')
             ;
 
@@ -31,7 +37,7 @@ class ExerciseHTMLPurifierExtension extends Extension
 
             $container->setDefinition($configServiceId, $configDefinition);
             
-            $purifierDefinition = new Definition('HTMLPurifier', array(new Reference($configServiceId)));
+            $purifierDefinition = new Definition('%exercise_html_purifier.class%', array(new Reference($configServiceId)));
             $container->setDefinition($this->getAlias().'.'.$name, $purifierDefinition);
         }
     }
