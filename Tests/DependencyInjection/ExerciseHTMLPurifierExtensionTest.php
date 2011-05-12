@@ -14,7 +14,6 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $this->cacheDir = sys_get_temp_dir() . '/htmlpurifierbundle';
         $this->container = new ContainerBuilder();
         $this->container->setParameter('kernel.cache_dir', $this->cacheDir);
-        $this->container->setParameter('kernel.environment', 'dev');
 
         $this->extension = new ExerciseHTMLPurifierExtension();
 
@@ -28,7 +27,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('HTMLPurifier', $this->container->getParameter('exercise_html_purifier.class'));
         $this->assertEquals('HTMLPurifier_Config', $this->container->getParameter('exercise_html_purifier.config.class'));
-        $this->assertEquals('%kernel.cache_dir%/%kernel.environment%/htmlpurifier', $this->container->getParameter('exercise_html_purifier.cache_dir'));
+        $this->assertEquals('%kernel.cache_dir%/htmlpurifier', $this->container->getParameter('exercise_html_purifier.cache_dir'));
     }
 
     public function testShouldCreateServicesAndParameters()
@@ -57,7 +56,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
             $this->assertInstanceOf('HTMLPurifier_Config', $this->container->get('exercise_html_purifier.config.'.$id));
         }
 
-        $this->assertEquals($this->cacheDir . '/dev/htmlpurifier', $this->container->getParameter('exercise_html_purifier.cache_dir'));
+        $this->assertEquals($this->cacheDir . '/htmlpurifier', $this->container->getParameter('exercise_html_purifier.cache_dir'));
     }
 
     private function compileContainer(ContainerBuilder $container)

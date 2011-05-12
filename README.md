@@ -31,7 +31,7 @@ Cache.SerializerPath
 --------------------
 
 When using HTMLPurifier caching HTMLPurifier complains when the dir isnt availible therefor this
-bundle includes a CacheWarmer that will create a `%kernel.cache_dir%/%kernel.environment%/htmlpurifier`
+bundle includes a CacheWarmer that will create a `%kernel.cache_dir%/htmlpurifier`
 directory to prevent this. But this **require** the config for caching be set as follows.
 
 ``` yml
