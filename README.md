@@ -37,7 +37,5 @@ directory to prevent this. But this **require** the config for caching be set as
 ``` yml
 exercise_html_purifier:
     your_config_name:
-        Cache.SerializerPath: %exercise_html_purifier.cache_dir%
+        Cache.SerializerPath: %kernel.cache_dir%/htmlpurifier
 ```
-
-`%exercise_html_purifier.cache_dir%` is a parameter provided by this bundles dependency injection configuration.
