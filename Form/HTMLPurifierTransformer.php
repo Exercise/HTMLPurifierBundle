@@ -1,6 +1,6 @@
 <?php
 
-namespace Exercise\HTMLPurifierBundle\Form\DataTransformer;
+namespace Exercise\HTMLPurifierBundle\Form;
 
 class HTMLPurifierTransformer implements \Symfony\Component\Form\DataTransformerInterface
 {
