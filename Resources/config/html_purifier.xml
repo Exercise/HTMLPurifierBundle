@@ -13,8 +13,5 @@
         <service id="exercise_html_purifier.cache_warmer.serializer" class="%exercise_html_purifier.cache_warmer.serializer.class%">
             <tag name="kernel.cache_warmer" />
         </service>
-        <service id="exercise_html_purifier.form_transformer" class="Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer">
-            <argument type="service" id="html_purifier" />
-        </service>
     </services>
 </container>
