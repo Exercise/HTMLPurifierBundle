@@ -3,7 +3,7 @@
 namespace Exercise\HTMLPurifierBundle\Tests\Form\DataTransformer;
 
 use Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle;
-use Exercise\HTMLPurifierBundle\Form\DataTransformer\HTMLPurifierTransformer;
+use Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer;
 use HTMLPurifier;
 use HTMLPurifier_Config;
 
