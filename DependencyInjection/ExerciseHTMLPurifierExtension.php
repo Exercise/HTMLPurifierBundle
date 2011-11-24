@@ -6,7 +6,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
@@ -18,16 +17,16 @@ class ExerciseHTMLPurifierExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('html_purifier.xml');
 
-        $processor = new Processor();
-        $configuration = new Configuration();
+        $configs = $this->processConfiguration(new Configuration(), $configs);
+        $configs = array_replace(array('default' => array()), $configs);
 
-        $config = $processor->processConfiguration($configuration, $configs);
+        foreach ($configs as $name => $options) {
+
             $options = array_replace(
                 array('Cache.SerializerPath' => $container->getParameter('kernel.cache_dir') . '/htmlpurifier'),
                 $options
             );
 
-        foreach ($config as $name => $options) {
             $configServiceId = $this->getAlias().'.config.'.$name;
             $configDefinition = new Definition('HTMLPurifier_Config');
             $configDefinition
