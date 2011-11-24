@@ -22,6 +22,10 @@ class ExerciseHTMLPurifierExtension extends Extension
         $configuration = new Configuration();
 
         $config = $processor->processConfiguration($configuration, $configs);
+            $options = array_replace(
+                array('Cache.SerializerPath' => $container->getParameter('kernel.cache_dir') . '/htmlpurifier'),
+                $options
+            );
 
         foreach ($config as $name => $options) {
             $configServiceId = $this->getAlias().'.config.'.$name;
