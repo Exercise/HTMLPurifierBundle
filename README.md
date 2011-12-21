@@ -1,30 +1,45 @@
-Installation
-============
+# ExerciseHTMLPurifierBundle
 
-  1. Add this bundle and the HTMLPurifier to your project as Git submodules:
+This bundle integrates [HTMLPurifier][] into Symfony2.
+
+  [HTMLPurifier]: http://htmlpurifier.org/
+
+## Installation
+
+### Submodule Creation
+
+Add HTMLPurifier and this bundle to your `vendor/` directory:
 
 ```
 $ git submodule add git://github.com/Exercise/HTMLPurifierBundle.git vendor/bundles/Exercise/HTMLPurifierBundle
 $ git submodule add git://github.com/ezyang/htmlpurifier.git vendor/htmlpurifier
 ```
 
-  2. Add the `HTMLPurifier` prefix to the src/autoload.php file:
+### Class Autoloading
 
-``` php
-<?php
+Register "HTMLPurifier" and the "Exercise" namespace prefix in your project's
+`autoload.php`:
+
+```
+# app/autoload.php
+
+$loader->registerNamespaces(array(
+    'Exercise' => __DIR__'/../vendor/bundles',
+));
+
 $loader->registerPrefixes(array(
-    // ...
-    'HTMLPurifier'    => __DIR__.'/vendor/htmlpurifier/library',
-    'Exercise'        => __DIR__.'/vendor/bundles',
-    // ...
+    'HTMLPurifier' => __DIR__'/../vendor//htmlpurifier/library,
 ));
 ```
 
-  3. Add this bundle to your application's kernel:
+### Application Kernel
 
-``` php
-<?php
-// application/ApplicationKernel.php
+Add HTMLPurifierBundle to the `registerBundles()` method of your application
+kernel:
+
+```
+# app/AppKernel.php
+
 public function registerBundles()
 {
     return array(
@@ -35,37 +50,81 @@ public function registerBundles()
 }
 ```
 
-Get it started
---------------------
+## Configuration
 
-The bundle provides a [form data transformer](http://symfony.com/doc/2.0/cookbook/form/data_transformers.html)
+If you do not explicitly configure this bundle, an HTMLPurifier service will be
+defined as `exercise_html_purifier.default`. This behavior is the same as if you
+had specified the following configuration:
 
-So the first step is to create form type:
+```
+# app/config.yml
+
+exercise_html_purifier:
+    default:
+        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+```
+
+The `default` profile is special in that it is used as the configuration for the
+`exercise_html_purifier.default` service as well as the base configuration for
+other profiles you might define:
+
+```
+# app/config.yml
+
+exercise_html_purifier:
+    default:
+        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+    custom:
+        Core.Encoding: 'ISO-8859-1'
+```
+
+In this example, a `exercise_html_purifier.custom` service will also be defined,
+which includes both the cache and encoding options. Available configuration
+options may be found in HTMLPurifier's [configuration documentation][].
+
+  [configuration documentation]: http://htmlpurifier.org/live/configdoc/plain.html
+
+## Cache Warming ##
+
+When a path is supplied for HTMLPurifier's `Cache.SerializerPath` configuration
+option, an error is raised if the directory is not writable. This bundle defines
+a cache warmer service that creates `%kernel.cache_dir%/htmlpurifier` if it does
+not exist.
+
+**Note:** The directory created by the cache warmer is not configurable. It
+assumes the default value for `Cache.SerializerPath`. This behavior will be
+fixed in the future.
+
+## Form Data Transformer
+
+This bundles provides a data transformer class for filtering form fields with
+HTMLPurifier. Purification is done during the `reverseTransform()` method, which
+means that client data will be filtered during binding to the form.
+
+The following example demonstrates one possible way to integrate an HTMLPurifier
+transformer into a form by way of a custom field type:
 
 ``` php
 <?php
-namespace FooBundle\Form\Type;
+
+namespace Acme\MainBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilder;
 
-use Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer;
-use HTMLPurifier;
-
-class DescriptionType extends AbstractType
+class PurifiedTextareaType extends AbstractType
 {
-    protected $purifier;
+    private $purifierTransformer;
 
-    public function __construct(HTMLPurifier $purifier)
+    public function __construct(DataTransformerInterface $purifierTransformer)
     {
-        $this->purifier = $purifier;
+        $this->purifierTransformer = $purifierTransformer;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->appendClientTransformer(
-            new HTMLPurifierTransformer($this->purifier)
-        );
+        $builder->appendClientTransformer($this->purifierTransformer);
     }
 
     public function getParent(array $options)
@@ -75,33 +134,28 @@ class DescriptionType extends AbstractType
 
     public function getName()
     {
-        return 'description';
+        return 'purified_textarea';
     }
 }
 ```
 
-Then we should it to the DI container:
+Additionally, we can define both the field type and transformer in the service
+container:
 
-``` yml
+``` xml
+<services>
+    <service id="acme.form.type.purified_textarea" class="Acme\MainBundle\Form\Type\PurifiedTextareaType">
+        <argument type="service" id="acme.form.transformer.html_purifier" />
+        <tag name="form.type" alias="purified_textarea" />
+    </service>
 
-foo.form.type.description:
-    class: FooBundle\Form\Type\DescriptionType
-    arguments:
-        - '@exercise_html_purifier.default'
-    tags:
-        - { name: form.type, alias: description }
+    <service id="acme.form.transformer.html_purifier" class="Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer">
+        <argument type="service" id="exercise_html_purifier.default" />
+    </service>
+</services>
 ```
 
-Configuration
---------------------
+Additional documentation on data transformers may be found in the
+[Symfony2 documentation][].
 
-You can easily change any option of default purifier or create your own. For that just create extension config:
-
-``` yml
-
-exercise_html_purifier:
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
-    your_config:
-        Core.Encoding: 'ISO-8859-1'
-```
+  [Symfony2 documentation]: http://symfony.com/doc/2.0/cookbook/form/data_transformers.html
