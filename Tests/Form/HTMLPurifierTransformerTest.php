@@ -2,28 +2,27 @@
 
 namespace Exercise\HTMLPurifierBundle\Tests\Form\DataTransformer;
 
-use Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle;
 use Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer;
-use HTMLPurifier;
-use HTMLPurifier_Config;
-
 
 class HTMLPurifierTransformerTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    public function testShouldPurifyOnlyDuringReverseTransform()
     {
-        $this->bundle = new ExerciseHTMLPurifierBundle();
-        $this->bundle->boot();
-    }
+        $input = 'text';
+        $purifiedInput = '<p>text</p>';
 
-    public function testShouldPurifyInput()
-    {
-        $purifier = new HTMLPurifier();
-        $purifier->config->set('Cache.DefinitionImpl', null);
-        $purifier->config->set('AutoFormat.AutoParagraph', true);
+        $purifier = $this->getMockBuilder('HTMLPurifier')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $purifier->expects($this->once())
+            ->method('purify')
+            ->with($input)
+            ->will($this->returnValue($purifiedInput));
 
         $transformer = new HTMLPurifierTransformer($purifier);
 
-        $this->assertEquals('<p>text</p>', $transformer->reverseTransform('text'));
+        $this->assertEquals($purifiedInput, $transformer->reverseTransform($input));
+        $this->assertEquals($purifiedInput, $transformer->transform($purifiedInput));
     }
 }
