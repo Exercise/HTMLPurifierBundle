@@ -2,20 +2,33 @@
 
 namespace Exercise\HTMLPurifierBundle\Form;
 
-class HTMLPurifierTransformer implements \Symfony\Component\Form\DataTransformerInterface
-{
-    protected $purifier;
+use Symfony\Component\Form\DataTransformerInterface;
 
+class HTMLPurifierTransformer implements DataTransformerInterface
+{
+    private $purifier;
+
+    /**
+     * Constructor.
+     *
+     * @param \HTMLPurifier $purifier
+     */
     public function __construct(\HTMLPurifier $purifier)
     {
         $this->purifier = $purifier;
     }
 
+    /**
+     * @see Symfony\Component\Form\DataTransformerInterface::transform()
+     */
     public function transform($value)
     {
         return $value;
     }
 
+    /**
+     * @see Symfony\Component\Form\DataTransformerInterface::reverseTransform()
+     */
     public function reverseTransform($value)
     {
         return $this->purifier->purify($value);

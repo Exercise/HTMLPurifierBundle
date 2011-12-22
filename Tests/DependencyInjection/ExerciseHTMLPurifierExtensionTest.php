@@ -1,11 +1,9 @@
 <?php
 
-namespace Exercise\HTMLPurfierBundle\Tests\DependencyInjection;
+namespace Exercise\HTMLPurifierBundle\Tests\DependencyInjection;
 
 use Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension;
-use Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 
 class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 {

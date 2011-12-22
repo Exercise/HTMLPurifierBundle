@@ -1,6 +1,6 @@
 <?php
 
-namespace Exercise\HTMLPurifierBundle\Tests\Form\DataTransformer;
+namespace Exercise\HTMLPurifierBundle\Tests\Form;
 
 use Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer;
 
