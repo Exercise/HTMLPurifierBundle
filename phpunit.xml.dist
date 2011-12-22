@@ -3,8 +3,8 @@
 <phpunit bootstrap="./Tests/bootstrap.php" colors="true">
 <!--
     <php>
-        <server name="SYMFONY" value="../../vendor/symfony/src" />
-        <server name="HTMLPURIFIER" value="../../vendor/symfony/src" />
+        <server name="SYMFONY" value="../../symfony/src" />
+        <server name="HTMLPURIFIER" value="../../htmlpurifier/library" />
     </php>
 -->
     <testsuites>
