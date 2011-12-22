@@ -118,6 +118,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.' . $name));
 
         $definition = $this->container->getDefinition('exercise_html_purifier.config.' . $name);
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getClass());
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
         $this->assertEquals('inherit', $definition->getFactoryMethod());
 
@@ -141,6 +142,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.default'));
 
         $definition = $this->container->getDefinition('exercise_html_purifier.config.default');
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getClass());
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
         $this->assertEquals('create', $definition->getFactoryMethod());
         $this->assertEquals(array($config), $definition->getArguments());
