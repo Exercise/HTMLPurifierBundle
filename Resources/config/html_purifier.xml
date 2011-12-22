@@ -7,6 +7,7 @@
         <parameter key="exercise_html_purifier.class">HTMLPurifier</parameter>
         <parameter key="exercise_html_purifier.config.class">HTMLPurifier_Config</parameter>
         <parameter key="exercise_html_purifier.cache_warmer.serializer.class">Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer</parameter>
+        <parameter key="exercise_html_purifier.twig_extension.class">Exercise\HTMLPurifierBundle\Twig\HTMLPurifierExtension</parameter>
 
         <parameter key="exercise_html_purifier.cache_warmer.serializer.paths" type="collection" />
     </parameters>
@@ -15,6 +16,11 @@
         <service id="exercise_html_purifier.cache_warmer.serializer" class="%exercise_html_purifier.cache_warmer.serializer.class%">
             <argument>%exercise_html_purifier.cache_warmer.serializer.paths%</argument>
             <tag name="kernel.cache_warmer" />
+        </service>
+
+        <service id="exercise_html_purifier.twig_extension" class="%exercise_html_purifier.twig_extension.class%">
+            <argument type="service" id="service_container" />
+            <tag name="twig.extension" />
         </service>
     </services>
 </container>

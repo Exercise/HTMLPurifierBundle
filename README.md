@@ -159,3 +159,17 @@ Additional documentation on data transformers may be found in the
 [Symfony2 documentation][].
 
   [Symfony2 documentation]: http://symfony.com/doc/2.0/cookbook/form/data_transformers.html
+
+## Twig Filter
+
+This bundles registers a `purify` filter with Twig. Output from this filter is
+marked safe for HTML, much like Twig's built-in escapers. The filter may be used
+as follows:
+
+``` jinja
+{# Filters text's value through the "default" HTMLPurifier service #}
+{{ text|purify }}
+
+{# Filters text's value through the "custom" HTMLPurifier service #}
+{{ text|purify('custom') }}
+```

@@ -6,10 +6,11 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
-    'Exercise\\HTMLPurifierBundle' => '../../',
-    'Symfony' => $_SERVER['SYMFONY'],
+    'Exercise\HTMLPurifierBundle' => realpath(__DIR__.'/../../..'),
+    'Symfony'                     => $_SERVER['SYMFONY'],
 ));
 $loader->registerPrefixes(array(
     'HTMLPurifier' => $_SERVER['HTMLPURIFIER'],
+    'Twig_'        => $_SERVER['TWIG'],
 ));
 $loader->register();
