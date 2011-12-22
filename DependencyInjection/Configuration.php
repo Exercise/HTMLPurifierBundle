@@ -10,15 +10,19 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('exercise_html_purifier');
 
-        return $treeBuilder
-            ->root('exercise_html_purifier', 'array')
+        $rootNode
+            ->useAttributeAsKey('name')
+            ->prototype('array')
+                ->treatNullLike(array())
+                ->performNoDeepMerging()
                 ->useAttributeAsKey('name')
-                ->prototype('array')
-                    ->useAttributeAsKey('name')
-                    ->prototype('variable')
-                    ->end()
+                ->prototype('variable')
                 ->end()
-            ->end();
+            ->end()
+        ;
+
+        return $treeBuilder;
     }
 }

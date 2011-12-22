@@ -17,31 +17,44 @@ class ExerciseHTMLPurifierExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('html_purifier.xml');
 
+        /* Prepend the default configuration. This cannot be defined within the
+         * Configuration class, since the root node's children are array
+         * prototypes.
+         *
+         * This cache path may be suppressed by either unsetting the "default"
+         * configuration (relying on canBeUnset() on the prototype node) or
+         * setting the "Cache.SerializerPath" option to null.
+         */
+        array_unshift($configs, array(
+            'default' => array(
+                'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
+            ),
+        ));
+
         $configs = $this->processConfiguration(new Configuration(), $configs);
-        $configs = array_replace(array('default' => array()), $configs);
 
-        foreach ($configs as $name => $options) {
+        foreach ($configs as $name => $config) {
+            $configDefinition = new Definition();
+            $configDefinition->setFactoryClass('%exercise_html_purifier.config.class%');
 
-            $options = array_replace(
-                array('Cache.SerializerPath' => $container->getParameter('kernel.cache_dir') . '/htmlpurifier'),
-                $options
-            );
-
-            $configServiceId = $this->getAlias().'.config.'.$name;
-            $configDefinition = new Definition('HTMLPurifier_Config');
-            $configDefinition
-                ->setFactoryClass('%exercise_html_purifier.config.class%')
-                ->setFactoryMethod('createDefault')
-            ;
-
-            foreach ($options as $key => $value) {
-                $configDefinition->addMethodCall('set', array($key, $value));
+            if ('default' === $name) {
+                $configDefinition
+                    ->setFactoryMethod('create')
+                    ->addArgument($config);
+            } else {
+                $configDefinition
+                    ->setFactoryMethod('inherit')
+                    ->addArgument(new Reference('exercise_html_purifier.config.default'))
+                    ->addMethodCall('loadArray', array($config));
             }
 
-            $container->setDefinition($configServiceId, $configDefinition);
+            $configId = 'exercise_html_purifier.config.' . $name;
+            $container->setDefinition($configId, $configDefinition);
             
-            $purifierDefinition = new Definition('%exercise_html_purifier.class%', array(new Reference($configServiceId)));
-            $container->setDefinition($this->getAlias().'.'.$name, $purifierDefinition);
+            $container->setDefinition(
+                'exercise_html_purifier.' . $name,
+                new Definition('%exercise_html_purifier.class%', array(new Reference($configId)))
+            );
         }
     }
 

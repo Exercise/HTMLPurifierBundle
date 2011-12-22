@@ -9,31 +9,49 @@ use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPas
 
 class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    private $container;
+
+    /**
+     * @var Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension
+     */
+    private $extension;
+
     public function setUp()
     {
-        $this->cacheDir = sys_get_temp_dir() . '/htmlpurifierbundle';
         $this->container = new ContainerBuilder();
-
         $this->extension = new ExerciseHTMLPurifierExtension();
-
-        $this->bundle = new ExerciseHTMLPurifierBundle();
-        $this->bundle->boot();
     }
 
-    public function testShouldLoadParameters()
+    public function testShouldLoadDefaultConfiguration()
     {
         $this->extension->load(array(), $this->container);
 
-        $this->assertEquals('HTMLPurifier', $this->container->getParameter('exercise_html_purifier.class'));
-        $this->assertEquals('HTMLPurifier_Config', $this->container->getParameter('exercise_html_purifier.config.class'));
+        $this->assertDefaultConfigDefinition(array(
+            'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
+        ));
     }
 
-    public function testShouldCreateServicesAndParameters()
+    public function testShouldAllowOverridingDefaultConfiguration()
     {
+        $this->extension->load(array(array('default' => null)), $this->container);
+
+        $this->assertDefaultConfigDefinition(array());
+    }
+
+    public function testShouldLoadCustomConfiguration()
+    {
+        $container = new ContainerBuilder();
+        $extension = new ExerciseHTMLPurifierExtension();
+
         $config = array(
+            'default' => array(
+                'AutoFormat.AutoParagraph'          => true,
+            ),
             'simple' => array(
                 'Cache.DefinitionImpl'              => null,
-                'AutoFormat.AutoParagraph'          => true,
                 'AutoFormat.Linkify'                => true,
                 'AutoFormat.RemoveEmpty'            => true,
                 'AutoFormat.RemoveEmpty.RemoveNbsp' => true,
@@ -41,27 +59,53 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
             ),
             'advanced' => array(
                 'Cache.DefinitionImpl'              => null,
-                'AutoFormat.AutoParagraph'          => true,
             ),
         );
 
         $this->extension->load(array($config), $this->container);
 
-        $this->compileContainer($this->container);
-
-        foreach (array('simple', 'advanced') as $id) {
-            $this->assertInstanceOf('HTMLPurifier', $this->container->get('exercise_html_purifier.'.$id));
-            $this->assertInstanceOf('HTMLPurifier_Config', $this->container->get('exercise_html_purifier.config.'.$id));
-        }
+        $this->assertDefaultConfigDefinition($config['default']);
+        $this->assertConfigDefinition('simple', $config['simple']);
+        $this->assertConfigDefinition('advanced', $config['advanced']);
     }
 
-    private function compileContainer(ContainerBuilder $container)
+    /**
+     * Assert that the named config definition extends the default profile and
+     * loads the given options.
+     *
+     * @param string $name
+     * @param array  $config
+     */
+    private function assertConfigDefinition($name, array $config)
     {
-        $container->setParameter('kernel.root_dir', __DIR__);
-        $container->getCompilerPassConfig()->setOptimizationPasses(array(
-            new ResolveDefinitionTemplatesPass(),
-        ));
-        $container->getCompilerPassConfig()->setRemovingPasses(array());
-        $container->compile();
-    }    
+        $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.' . $name));
+
+        $definition = $this->container->getDefinition('exercise_html_purifier.config.' . $name);
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
+        $this->assertEquals('inherit', $definition->getFactoryMethod());
+
+        $this->assertEquals(1, count($definition->getArguments()));
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $definition->getArgument(0));
+        $this->assertEquals('exercise_html_purifier.config.default', (string) $definition->getArgument(0));
+
+        $calls = $definition->getMethodCalls();
+        $this->assertEquals(1, count($calls));
+        $this->assertEquals('loadArray', $calls[0][0]);
+        $this->assertEquals(array($config), $calls[0][1]);
+    }
+
+    /**
+     * Assert that the default config definition loads the given options.
+     *
+     * @param array $config
+     */
+    private function assertDefaultConfigDefinition(array $config)
+    {
+        $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.default'));
+
+        $definition = $this->container->getDefinition('exercise_html_purifier.config.default');
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
+        $this->assertEquals('create', $definition->getFactoryMethod());
+        $this->assertEquals(array($config), $definition->getArguments());
+    }
 }
