@@ -6,23 +6,26 @@ use Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer;
 
 class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    public function testShouldBeRequired()
     {
-        $this->cacheWarmer = new SerializerCacheWarmer();
+        $cacheWarmer = new SerializerCacheWarmer(array());
+        $this->assertFalse($cacheWarmer->isOptional());
     }
 
-    public function testIsMandatory()
+    public function testShouldCreatePaths()
     {
-        $this->assertFalse($this->cacheWarmer->isOptional());
-    }
+        if (!is_writable(sys_get_temp_dir())) {
+            $this->markTestSkipped(sprintf('The system temp directory "%s" is not writeable for the current system user.', sys_get_temp_dir()));
+        }
 
-    public function testWarmUp()
-    {
-        $dir = sys_get_temp_dir() . uniqid('htmlpurifierbundle');
-        $this->assertFalse(is_dir($dir . '/htmlpurifier'));
+        $path = sys_get_temp_dir() . '/' . uniqid('htmlpurifierbundle');
 
-        $this->cacheWarmer->warmUp($dir);
-        $this->assertTrue(is_dir($dir . '/htmlpurifier'));
-        $this->assertTrue(is_writeable($dir . '/htmlpurifier'));
+        $cacheWarmer = new SerializerCacheWarmer(array($path));
+        $cacheWarmer->warmUp(null);
+
+        $this->assertTrue(is_dir($path));
+        $this->assertTrue(is_writeable($path));
+
+        rmdir($path);
     }
 }

@@ -2,32 +2,45 @@
 
 namespace Exercise\HTMLPurifierBundle\CacheWarmer;
 
+use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+
 /**
- * CacheWarmer. HTMLPurifier complains when it cant find the directory in the cache
- * folder so this creates it before hand.
+ * Cache warmer for creating HTMLPurifier's cache directory.
  *
  * @author Henrik Bjornskov <henrik@bjrnskov.dk>
  */
-class SerializerCacheWarmer implements \Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface
+class SerializerCacheWarmer implements CacheWarmerInterface
 {
+    private $paths;
+
     /**
-     * @param string $cacheDir
+     * Constructor.
+     *
+     * @param array $paths
+     */
+    public function __construct(array $paths)
+    {
+        $this->paths = $paths;
+    }
+
+    /**
+     * @see Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface::warmUp()
      */
     public function warmUp($cacheDir)
     {
-        $cacheDir = $cacheDir.'/htmlpurifier';
-
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir, 0777, true);
-        }
-
-        if (!is_writeable($cacheDir)) {
-            chmod($cacheDir, 0777);
+        foreach ($this->paths as $path) {
+            if (!is_dir($path)) {
+                if (false === @mkdir($path, 0777, true)) {
+                    throw new \RuntimeException(sprintf('Unable to create the HTMLPurifier Serializer cache directory "%s".', $path));
+                }
+            } elseif (!is_writable($path)) {
+                throw new \RuntimeException(sprintf('The HTMLPurifier Serializer cache directory "%s" is not writeable for the current system user.', $path));
+            }
         }
     }
 
     /**
-     * @return Boolean
+     * @see Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface::isOptional()
      */
     public function isOptional()
     {

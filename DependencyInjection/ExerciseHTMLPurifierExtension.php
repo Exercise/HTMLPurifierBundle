@@ -32,6 +32,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         ));
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
+        $paths = array();
 
         foreach ($configs as $name => $config) {
             $configDefinition = new Definition();
@@ -50,12 +51,18 @@ class ExerciseHTMLPurifierExtension extends Extension
 
             $configId = 'exercise_html_purifier.config.' . $name;
             $container->setDefinition($configId, $configDefinition);
-            
+
             $container->setDefinition(
                 'exercise_html_purifier.' . $name,
                 new Definition('%exercise_html_purifier.class%', array(new Reference($configId)))
             );
+
+            if (isset($config['Cache.SerializerPath'])) {
+                $paths[] = $config['Cache.SerializerPath'];
+            }
         }
+
+        $container->setParameter('exercise_html_purifier.cache_warmer.serializer.paths', array_unique($paths));
     }
 
     public function getAlias()

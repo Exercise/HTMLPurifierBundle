@@ -15,8 +15,6 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->useAttributeAsKey('name')
             ->prototype('array')
-                ->treatNullLike(array())
-                ->performNoDeepMerging()
                 ->useAttributeAsKey('name')
                 ->prototype('variable')
                 ->end()

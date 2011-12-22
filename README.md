@@ -66,7 +66,7 @@ exercise_html_purifier:
 
 The `default` profile is special in that it is used as the configuration for the
 `exercise_html_purifier.default` service as well as the base configuration for
-other profiles you might define:
+other profiles you might define.
 
 ```
 # app/config.yml
@@ -82,18 +82,18 @@ In this example, a `exercise_html_purifier.custom` service will also be defined,
 which includes both the cache and encoding options. Available configuration
 options may be found in HTMLPurifier's [configuration documentation][].
 
+**Note:** If you define a `default` profile but omit `Cache.SerializerPath`, it
+will still default to the path above. You can specify a value of `null` for the
+option to suppress the default path.
+
   [configuration documentation]: http://htmlpurifier.org/live/configdoc/plain.html
 
 ## Cache Warming ##
 
 When a path is supplied for HTMLPurifier's `Cache.SerializerPath` configuration
 option, an error is raised if the directory is not writable. This bundle defines
-a cache warmer service that creates `%kernel.cache_dir%/htmlpurifier` if it does
-not exist.
-
-**Note:** The directory created by the cache warmer is not configurable. It
-assumes the default value for `Cache.SerializerPath`. This behavior will be
-fixed in the future.
+a cache warmer service that will collect all `Cache.SerializerPath` options and
+ensure those directories exist and are writeable.
 
 ## Form Data Transformer
 
