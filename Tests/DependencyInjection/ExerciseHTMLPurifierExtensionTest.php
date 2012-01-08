@@ -106,6 +106,30 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testShouldResolveServices()
+    {
+        $container = new ContainerBuilder;
+        $extension = new ExerciseHTMLPurifierExtension();
+
+        $config = array(
+            'simple' => array(
+                'AutoFormat.Custom' => array('@service_container'),
+            ),
+        );
+
+        $this->extension->load(array($config), $this->container);
+
+        $definition = $this->container->getDefinition('exercise_html_purifier.config.simple');
+        $calls = $definition->getMethodCalls();
+
+        $call = $calls[0];
+        $this->assertSame('loadArray', $call[0]);
+
+        $args = $call[1];
+
+        $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $args[0]['AutoFormat.Custom'][0]);
+    }
+
     /**
      * Assert that the named config definition extends the default profile and
      * loads the given options.
