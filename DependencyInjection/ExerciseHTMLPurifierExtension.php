@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ExerciseHTMLPurifierExtension extends Extension
 {
@@ -31,6 +32,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         ));
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
+        $configs = array_map(array($this, 'resolveServices'), $configs);
         $paths = array();
 
         foreach ($configs as $name => $config) {
@@ -67,5 +69,31 @@ class ExerciseHTMLPurifierExtension extends Extension
     public function getAlias()
     {
         return 'exercise_html_purifier';
+    }
+
+    private function resolveServices($value)
+    {
+        if (is_array($value)) {
+            $value = array_map(array($this, 'resolveServices'), $value);
+        } else if (is_string($value) &&  0 === strpos($value, '@')) {
+            if (0 === strpos($value, '@?')) {
+                $value = substr($value, 2);
+                $invalidBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;
+            } else {
+                $value = substr($value, 1);
+                $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
+            }
+
+            if ('=' === substr($value, -1)) {
+                $value = substr($value, 0, -1);
+                $strict = false;
+            } else {
+                $strict = true;
+            }
+
+            $value = new Reference($value, $invalidBehavior, $strict);
+        }
+
+        return $value;
     }
 }
