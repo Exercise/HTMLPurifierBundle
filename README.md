@@ -24,11 +24,11 @@ Register "HTMLPurifier" and the "Exercise" namespace prefix in your project's
 # app/autoload.php
 
 $loader->registerNamespaces(array(
-    'Exercise' => __DIR__'/../vendor/bundles',
+    'Exercise' => __DIR__ . '/../vendor/bundles',
 ));
 
 $loader->registerPrefixes(array(
-    'HTMLPurifier' => __DIR__'/../vendor//htmlpurifier/library',
+    'HTMLPurifier' => __DIR__ . '/../vendor//htmlpurifier/library',
 ));
 ```
 
