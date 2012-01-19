@@ -28,7 +28,7 @@ $loader->registerNamespaces(array(
 ));
 
 $loader->registerPrefixes(array(
-    'HTMLPurifier' => __DIR__'/../vendor//htmlpurifier/library,
+    'HTMLPurifier' => __DIR__'/../vendor//htmlpurifier/library',
 ));
 ```
 
