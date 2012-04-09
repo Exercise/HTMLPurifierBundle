@@ -1,5 +1,5 @@
 {
-    "name": "exercise/html-purifier-bundle",
+    "name": "exercise/htmlpurifier-bundle",
     "type": "symfony-bundle",
     "description": "HTMLPurifier integration for your Symfony2 project",
     "keywords": ["htmlpurifier"],
