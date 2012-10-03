@@ -111,7 +111,8 @@ namespace Acme\MainBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PurifiedTextareaType extends AbstractType
 {
@@ -122,14 +123,21 @@ class PurifiedTextareaType extends AbstractType
         $this->purifierTransformer = $purifierTransformer;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->appendClientTransformer($this->purifierTransformer);
     }
 
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'textarea';
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'compound' => false,
+        ));
     }
 
     public function getName()
