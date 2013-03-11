@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "ezyang/htmlpurifier": "dev-master"
+        "ezyang/htmlpurifier": "~4"
     },
     "autoload": {
         "psr-0": { "Exercise\\HTMLPurifierBundle": "" }
