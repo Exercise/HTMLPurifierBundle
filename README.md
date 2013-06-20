@@ -125,7 +125,7 @@ class PurifiedTextareaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->appendClientTransformer($this->purifierTransformer);
+        $builder->addViewTransformer($this->purifierTransformer);
     }
 
     public function getParent()
