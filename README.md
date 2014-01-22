@@ -6,6 +6,40 @@ This bundle integrates [HTMLPurifier][] into Symfony2.
 
 ## Installation
 
+## Symfony 2.1 and above (using Composer)
+
+Require the bundle in your composer.json file:
+
+```
+{
+    "require": {
+        "exercise/htmlpurifier-bundle": "*",
+    }
+}
+```
+
+Install the bundle:
+
+```
+$ composer update exercise/htmlpurifier-bundle
+```
+
+Register the bundle:
+
+``` php
+// app/AppKernel.php
+
+public function registerBundles()
+{
+    return array(
+        new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
+        // ...
+    );
+}
+```
+
+## Symfony 2.0.*
+
 ### Submodule Creation
 
 Add HTMLPurifier and this bundle to your `vendor/` directory:
