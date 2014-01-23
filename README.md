@@ -181,8 +181,7 @@ class PurifiedTextareaType extends AbstractType
 }
 ```
 
-Additionally, we can define both the field type and transformer in the service
-container:
+Then define both the field type and transformer in the service container:
 
 ``` xml
 <services>
