@@ -199,7 +199,7 @@ Then define both the field type and transformer in the service container:
 Additional documentation on data transformers may be found in the
 [Symfony2 documentation][].
 
-  [Symfony2 documentation]: http://symfony.com/doc/2.0/cookbook/form/data_transformers.html
+  [Symfony2 documentation]: http://symfony.com/doc/current/cookbook/form/data_transformers.html
 
 ## Twig Filter
 
