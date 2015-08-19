@@ -26,7 +26,7 @@ class HTMLPurifierExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'purify' => new \Twig_Filter_Method($this, 'purify', array('is_safe' => array('html'))),
+            new \Twig_SimpleFilter('purify', array($this, 'purify'), array('is_safe' => array('html'))),
         );
     }
 
