@@ -21,7 +21,7 @@ Require the bundle in your composer.json file:
 Install the bundle:
 
 ```
-$ composer update exercise/htmlpurifier-bundle
+$ composer require exercise/htmlpurifier-bundle
 ```
 
 Register the bundle:
