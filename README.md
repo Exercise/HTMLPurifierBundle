@@ -13,7 +13,7 @@ Require the bundle in your composer.json file:
 ```
 {
     "require": {
-        "exercise/htmlpurifier-bundle": "*",
+        "exercise/htmlpurifier-bundle": "*"
     }
 }
 ```
