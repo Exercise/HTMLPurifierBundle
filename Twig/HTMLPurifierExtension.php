@@ -8,12 +8,12 @@ class HTMLPurifierExtension extends \Twig_Extension
 {
     private $container;
 
-    private $purifiers = array();
+    private $purifiers = [];
 
     /**
      * Constructor.
      *
-     * @param \HTMLPurifier $purifier
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -25,9 +25,9 @@ class HTMLPurifierExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('purify', array($this, 'purify'), array('is_safe' => array('html'))),
-        );
+        return [
+            new \Twig_SimpleFilter('purify', [$this, 'purify'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
