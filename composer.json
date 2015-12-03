@@ -5,7 +5,7 @@
     "keywords": ["htmlpurifier"],
     "homepage": "https://github.com/Exercise/HTMLPurifierBundle",
     "license": "MIT",
-    "version": "0.2.3",
+    "version": "0.2.2",
     "authors": [
         { "name": "contributors", "homepage": "https://github.com/Exercise/HTMLPurifierBundle/contributors" }
     ],
