@@ -25,30 +25,30 @@ class ExerciseHTMLPurifierExtension extends Extension
          * configuration (relying on canBeUnset() on the prototype node) or
          * setting the "Cache.SerializerPath" option to null.
          */
-        array_unshift($configs, array(
-            'default' => array(
+        array_unshift($configs, [
+            'default' => [
                 'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
-            ),
-        ));
+            ],
+        ]);
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
-        $configs = array_map(array($this, 'resolveServices'), $configs);
-        $paths = array();
+        $configs = array_map([$this, 'resolveServices'], $configs);
+        $paths = [];
 
         foreach ($configs as $name => $config) {
             $configDefinition = new Definition('%exercise_html_purifier.config.class%');
-			
+            
             // Handle Symfony >= 2.7
             if (method_exists($configDefinition, 'setFactory')) {
                 if ('default' === $name) {
                     $configDefinition
-                        ->setFactory(array('%exercise_html_purifier.config.class%', 'create'))
+                        ->setFactory(['%exercise_html_purifier.config.class%', 'create'])
                         ->addArgument($config);
                 } else {
                     $configDefinition
-                        ->setFactory(array('%exercise_html_purifier.config.class%', 'inherit'))
+                        ->setFactory(['%exercise_html_purifier.config.class%', 'inherit'])
                         ->addArgument(new Reference('exercise_html_purifier.config.default'))
-                        ->addMethodCall('loadArray', array($config));
+                        ->addMethodCall('loadArray', [$config]);
                 }
             }
             // Handle Symfony < 2.7
@@ -63,7 +63,7 @@ class ExerciseHTMLPurifierExtension extends Extension
                     $configDefinition
                         ->setFactoryMethod('inherit')
                         ->addArgument(new Reference('exercise_html_purifier.config.default'))
-                        ->addMethodCall('loadArray', array($config));
+                        ->addMethodCall('loadArray', [$config]);
                 }
             }
 
@@ -72,7 +72,7 @@ class ExerciseHTMLPurifierExtension extends Extension
 
             $container->setDefinition(
                 'exercise_html_purifier.' . $name,
-                new Definition('%exercise_html_purifier.class%', array(new Reference($configId)))
+                new Definition('%exercise_html_purifier.class%', [new Reference($configId)])
             );
 
             if (isset($config['Cache.SerializerPath'])) {
@@ -91,8 +91,8 @@ class ExerciseHTMLPurifierExtension extends Extension
     private function resolveServices($value)
     {
         if (is_array($value)) {
-            $value = array_map(array($this, 'resolveServices'), $value);
-        } else if (is_string($value) &&  0 === strpos($value, '@')) {
+            $value = array_map([$this, 'resolveServices'], $value);
+        } elseif (is_string($value) &&  0 === strpos($value, '@')) {
             if (0 === strpos($value, '@?')) {
                 $value = substr($value, 2);
                 $invalidBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;

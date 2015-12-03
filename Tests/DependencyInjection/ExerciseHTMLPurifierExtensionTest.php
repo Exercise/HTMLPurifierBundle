@@ -24,52 +24,52 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $this->container = new ContainerBuilder();
         $this->extension = new ExerciseHTMLPurifierExtension();
 
-        $this->defaultConfig = array(
+        $this->defaultConfig = [
             'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
-        );
+        ];
     }
 
     public function testShouldLoadDefaultConfiguration()
     {
-        $this->extension->load(array(), $this->container);
+        $this->extension->load([], $this->container);
 
         $this->assertDefaultConfigDefinition($this->defaultConfig);
-        $this->assertCacheWarmerSerializerPaths(array('%kernel.cache_dir%/htmlpurifier'));
+        $this->assertCacheWarmerSerializerPaths(['%kernel.cache_dir%/htmlpurifier']);
     }
 
     public function testShouldAllowOverridingDefaultConfigurationCacheSerializerPath()
     {
-        $config = array(
-            'default' => array(
+        $config = [
+            'default' => [
                 'AutoFormat.AutoParagraph' => true,
                 'Cache.SerializerPath'     => null,
-            ),
-        );
+            ],
+        ];
 
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertDefaultConfigDefinition($config['default']);
-        $this->assertCacheWarmerSerializerPaths(array());
+        $this->assertCacheWarmerSerializerPaths([]);
     }
 
     public function testShouldNotDeepMergeOptions()
     {
-        $configs = array(
-            array('default' => array(
-                'Core.HiddenElements'  => array('script' => true),
+        $configs = [
+            ['default' => [
+                'Core.HiddenElements'  => ['script' => true],
                 'Cache.SerializerPath' => null,
-            )),
-            array('default' => array(
-                'Core.HiddenElements'  => array('style' => true),
-            )),
-        );
+            ]],
+            ['default' => [
+                'Core.HiddenElements'  => ['style' => true],
+            ]],
+        ];
 
         $this->extension->load($configs, $this->container);
 
-        $this->assertDefaultConfigDefinition(array(
-            'Core.HiddenElements'  => array('style' => true),
+        $this->assertDefaultConfigDefinition([
+            'Core.HiddenElements'  => ['style' => true],
             'Cache.SerializerPath' => null,
-        ));
+        ]);
     }
 
     public function testShouldLoadCustomConfiguration()
@@ -77,33 +77,33 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder();
         $extension = new ExerciseHTMLPurifierExtension();
 
-        $config = array(
-            'default' => array(
+        $config = [
+            'default' => [
                 'AutoFormat.AutoParagraph'          => true,
-            ),
-            'simple' => array(
+            ],
+            'simple' => [
                 'Cache.DefinitionImpl'              => null,
                 'Cache.SerializerPath'              => '%kernel.cache_dir%/htmlpurifier-simple',
                 'AutoFormat.Linkify'                => true,
                 'AutoFormat.RemoveEmpty'            => true,
                 'AutoFormat.RemoveEmpty.RemoveNbsp' => true,
                 'HTML.Allowed'                      => "a[href],strong,em,p,li,ul,ol",
-            ),
-            'advanced' => array(
+            ],
+            'advanced' => [
                 'Cache.DefinitionImpl'              => null,
-            ),
-        );
+            ],
+        ];
 
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $this->assertDefaultConfigDefinition(array_replace($this->defaultConfig, $config['default']));
         $this->assertConfigDefinition('simple', $config['simple']);
         $this->assertConfigDefinition('advanced', $config['advanced']);
 
-        $this->assertCacheWarmerSerializerPaths(array(
+        $this->assertCacheWarmerSerializerPaths([
             '%kernel.cache_dir%/htmlpurifier',
             '%kernel.cache_dir%/htmlpurifier-simple',
-        ));
+        ]);
     }
 
     public function testShouldResolveServices()
@@ -111,13 +111,13 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $container = new ContainerBuilder;
         $extension = new ExerciseHTMLPurifierExtension();
 
-        $config = array(
-            'simple' => array(
-                'AutoFormat.Custom' => array('@service_container'),
-            ),
-        );
+        $config = [
+            'simple' => [
+                'AutoFormat.Custom' => ['@service_container'],
+            ],
+        ];
 
-        $this->extension->load(array($config), $this->container);
+        $this->extension->load([$config], $this->container);
 
         $definition = $this->container->getDefinition('exercise_html_purifier.config.simple');
         $calls = $definition->getMethodCalls();
@@ -153,7 +153,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $calls = $definition->getMethodCalls();
         $this->assertEquals(1, count($calls));
         $this->assertEquals('loadArray', $calls[0][0]);
-        $this->assertEquals(array($config), $calls[0][1]);
+        $this->assertEquals([$config], $calls[0][1]);
     }
 
     /**
@@ -169,7 +169,7 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getClass());
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
         $this->assertEquals('create', $definition->getFactoryMethod());
-        $this->assertEquals(array($config), $definition->getArguments());
+        $this->assertEquals([$config], $definition->getArguments());
     }
 
     /**

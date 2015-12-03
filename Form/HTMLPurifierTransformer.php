@@ -20,6 +20,8 @@ class HTMLPurifierTransformer implements DataTransformerInterface
 
     /**
      * @see Symfony\Component\Form\DataTransformerInterface::transform()
+     * @param mixed $value
+     * @return mixed
      */
     public function transform($value)
     {
@@ -28,6 +30,8 @@ class HTMLPurifierTransformer implements DataTransformerInterface
 
     /**
      * @see Symfony\Component\Form\DataTransformerInterface::reverseTransform()
+     * @param mixed $value
+     * @return mixed|string
      */
     public function reverseTransform($value)
     {

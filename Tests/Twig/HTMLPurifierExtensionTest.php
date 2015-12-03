@@ -37,9 +37,9 @@ class HTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function providePurifierProfiles()
     {
-        return array(
-            array('default'),
-            array('custom'),
-        );
+        return [
+            ['default'],
+            ['custom'],
+        ];
     }
 }
