@@ -3,6 +3,7 @@
 namespace Exercise\HTMLPurifierBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use HTMLPurifier;
 
 /**
  * Cache warmer for creating HTMLPurifier's cache directory.
@@ -18,9 +19,10 @@ class SerializerCacheWarmer implements CacheWarmerInterface
      *
      * @param array $paths
      */
-    public function __construct(array $paths)
+    public function __construct(array $paths, HTMLPurifier $htmlPurifier)
     {
         $this->paths = $paths;
+        $this->htmlPurifier = $htmlPurifier;
     }
 
     /**
@@ -37,6 +39,8 @@ class SerializerCacheWarmer implements CacheWarmerInterface
                 throw new \RuntimeException(sprintf('The HTMLPurifier Serializer cache directory "%s" is not writeable for the current system user.', $path));
             }
         }
+        $this->htmlPurifier->purify('<div style="border: thick">-2</div>');
+        $this->htmlPurifier->purify('<div style="background:url(\'http://www.example.com/x.gif\');">');
     }
 
     /**
