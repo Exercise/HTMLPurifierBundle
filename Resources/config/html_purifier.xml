@@ -15,6 +15,7 @@
     <services>
         <service id="exercise_html_purifier.cache_warmer.serializer" class="%exercise_html_purifier.cache_warmer.serializer.class%">
             <argument>%exercise_html_purifier.cache_warmer.serializer.paths%</argument>
+            <argument type="service" id="exercise_html_purifier.default" />
             <tag name="kernel.cache_warmer" />
         </service>
 

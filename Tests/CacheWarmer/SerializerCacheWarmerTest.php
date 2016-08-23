@@ -8,7 +8,7 @@ class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
 {
     public function testShouldBeRequired()
     {
-        $cacheWarmer = new SerializerCacheWarmer(array());
+        $cacheWarmer = new SerializerCacheWarmer(array(), new \HTMLPurifier());
         $this->assertFalse($cacheWarmer->isOptional());
     }
 
@@ -20,7 +20,7 @@ class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
 
         $path = sys_get_temp_dir() . '/' . uniqid('htmlpurifierbundle');
 
-        $cacheWarmer = new SerializerCacheWarmer(array($path));
+        $cacheWarmer = new SerializerCacheWarmer(array($path), new \HTMLPurifier());
         $cacheWarmer->warmUp(null);
 
         $this->assertTrue(is_dir($path));
