@@ -10,7 +10,7 @@ This bundle integrates [HTMLPurifier][] into Symfony2.
 
 Require the bundle in your composer.json file:
 
-```
+``` json
 {
     "require": {
         "exercise/htmlpurifier-bundle": "*"
@@ -20,7 +20,7 @@ Require the bundle in your composer.json file:
 
 Install the bundle:
 
-```
+``` bash
 $ composer require exercise/htmlpurifier-bundle
 ```
 
@@ -44,7 +44,7 @@ public function registerBundles()
 
 Add HTMLPurifier and this bundle to your `vendor/` directory:
 
-```
+``` bash
 $ git submodule add git://github.com/Exercise/HTMLPurifierBundle.git vendor/bundles/Exercise/HTMLPurifierBundle
 $ git submodule add git://github.com/ezyang/htmlpurifier.git vendor/htmlpurifier
 ```
@@ -54,7 +54,7 @@ $ git submodule add git://github.com/ezyang/htmlpurifier.git vendor/htmlpurifier
 Register "HTMLPurifier" and the "Exercise" namespace prefix in your project's
 `autoload.php`:
 
-```
+``` php
 # app/autoload.php
 
 $loader->registerNamespaces(array(
@@ -71,7 +71,7 @@ $loader->registerPrefixes(array(
 Add HTMLPurifierBundle to the `registerBundles()` method of your application
 kernel:
 
-```
+``` php
 # app/AppKernel.php
 
 public function registerBundles()
@@ -90,7 +90,7 @@ If you do not explicitly configure this bundle, an HTMLPurifier service will be
 defined as `exercise_html_purifier.default`. This behavior is the same as if you
 had specified the following configuration:
 
-```
+``` yaml
 # app/config.yml
 
 exercise_html_purifier:
@@ -102,7 +102,7 @@ The `default` profile is special in that it is used as the configuration for the
 `exercise_html_purifier.default` service as well as the base configuration for
 other profiles you might define.
 
-```
+``` yaml
 # app/config.yml
 
 exercise_html_purifier:
