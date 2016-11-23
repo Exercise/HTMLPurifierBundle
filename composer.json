@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "symfony/form": "~2.0",
-        "twig/twig": "~1.3"
+        "twig/twig": "~1.12"
     },
     "extra": {
         "branch-alias": {
