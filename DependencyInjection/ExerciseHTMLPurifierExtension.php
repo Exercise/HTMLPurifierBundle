@@ -73,7 +73,7 @@ class ExerciseHTMLPurifierExtension extends Extension
             $container->setDefinition(
                 'exercise_html_purifier.' . $name,
                 new Definition('%exercise_html_purifier.class%', array(new Reference($configId)))
-            );
+            )->setPublic(true);
 
             if (isset($config['Cache.SerializerPath'])) {
                 $paths[] = $config['Cache.SerializerPath'];
