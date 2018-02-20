@@ -13,7 +13,7 @@ class HTMLPurifierExtension extends \Twig_Extension
     /**
      * Constructor.
      *
-     * @param \HTMLPurifier $purifier
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {

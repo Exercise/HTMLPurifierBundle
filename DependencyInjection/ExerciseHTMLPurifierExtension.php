@@ -37,42 +37,27 @@ class ExerciseHTMLPurifierExtension extends Extension
 
         foreach ($configs as $name => $config) {
             $configDefinition = new Definition('%exercise_html_purifier.config.class%');
-			
-            // Handle Symfony >= 2.7
-            if (method_exists($configDefinition, 'setFactory')) {
-                if ('default' === $name) {
-                    $configDefinition
-                        ->setFactory(array('%exercise_html_purifier.config.class%', 'create'))
-                        ->addArgument($config);
-                } else {
-                    $configDefinition
-                        ->setFactory(array('%exercise_html_purifier.config.class%', 'inherit'))
-                        ->addArgument(new Reference('exercise_html_purifier.config.default'))
-                        ->addMethodCall('loadArray', array($config));
-                }
-            }
-            // Handle Symfony < 2.7
-            else {
-                $configDefinition->setFactoryClass('%exercise_html_purifier.config.class%');
 
-                if ('default' === $name) {
-                    $configDefinition
-                        ->setFactoryMethod('create')
-                        ->addArgument($config);
-                } else {
-                    $configDefinition
-                        ->setFactoryMethod('inherit')
-                        ->addArgument(new Reference('exercise_html_purifier.config.default'))
-                        ->addMethodCall('loadArray', array($config));
-                }
+            if ('default' === $name) {
+                $configDefinition
+                    ->setFactory(array('%exercise_html_purifier.config.class%', 'create'))
+                    ->addArgument($config);
+            } else {
+                $configDefinition
+                    ->setFactory(array('%exercise_html_purifier.config.class%', 'inherit'))
+                    ->addArgument(new Reference('exercise_html_purifier.config.default'))
+                    ->addMethodCall('loadArray', array($config));
             }
 
             $configId = 'exercise_html_purifier.config.' . $name;
             $container->setDefinition($configId, $configDefinition);
 
+            $purifierDefinition = new Definition('%exercise_html_purifier.class%', array(new Reference($configId)));
+            $purifierDefinition->setPublic(true);
+
             $container->setDefinition(
                 'exercise_html_purifier.' . $name,
-                new Definition('%exercise_html_purifier.class%', array(new Reference($configId)))
+                $purifierDefinition
             );
 
             if (isset($config['Cache.SerializerPath'])) {
