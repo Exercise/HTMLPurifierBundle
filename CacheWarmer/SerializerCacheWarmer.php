@@ -11,7 +11,7 @@ use HTMLPurifier;
  * Run purify() with various contents to have the caches built here, and not
  * on first use, as the owning user may be different then, causing problems
  * with file ownership when deleting the cached files later.
- * 
+ *
  * @author Henrik Bjornskov <henrik@bjrnskov.dk>
  */
 class SerializerCacheWarmer implements CacheWarmerInterface
@@ -33,7 +33,7 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @see Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface::warmUp()
+     * @see \Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface::warmUp()
      */
     public function warmUp($cacheDir)
     {
@@ -53,7 +53,7 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     }
 
     /**
-     * @see Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface::isOptional()
+     * @see \Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface::isOptional()
      */
     public function isOptional()
     {
