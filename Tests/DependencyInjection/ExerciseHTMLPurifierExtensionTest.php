@@ -8,12 +8,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Symfony\Component\DependencyInjection\ContainerBuilder
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
     private $container;
 
     /**
-     * @var Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension
+     * @var \Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension
      */
     private $extension;
 
@@ -74,9 +74,6 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldLoadCustomConfiguration()
     {
-        $container = new ContainerBuilder();
-        $extension = new ExerciseHTMLPurifierExtension();
-
         $config = array(
             'default' => array(
                 'AutoFormat.AutoParagraph'          => true,
@@ -108,9 +105,6 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldResolveServices()
     {
-        $container = new ContainerBuilder;
-        $extension = new ExerciseHTMLPurifierExtension();
-
         $config = array(
             'simple' => array(
                 'AutoFormat.Custom' => array('@service_container'),
