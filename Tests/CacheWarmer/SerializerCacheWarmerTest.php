@@ -3,8 +3,9 @@
 namespace Exercise\HTMLPurifierBundle\Tests\CacheWarmer;
 
 use Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer;
+use PHPUnit\Framework\TestCase;
 
-class SerializerCacheWarmerTest extends \PHPUnit_Framework_TestCase
+class SerializerCacheWarmerTest extends TestCase
 {
     public function testShouldBeRequired()
     {

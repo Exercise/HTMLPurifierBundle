@@ -3,9 +3,10 @@
 namespace Exercise\HTMLPurifierBundle\Tests\DependencyInjection;
 
 use Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
+class ExerciseHTMLPurifierExtensionTest extends TestCase
 {
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerBuilder
@@ -137,8 +138,8 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('exercise_html_purifier.config.' . $name);
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getClass());
-        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
-        $this->assertEquals('inherit', $definition->getFactoryMethod());
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactory()[0]);
+        $this->assertEquals('inherit', $definition->getFactory()[1]);
 
         $this->assertEquals(1, count($definition->getArguments()));
         $this->assertInstanceOf('Symfony\Component\DependencyInjection\Reference', $definition->getArgument(0));
@@ -161,8 +162,8 @@ class ExerciseHTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
 
         $definition = $this->container->getDefinition('exercise_html_purifier.config.default');
         $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getClass());
-        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactoryClass());
-        $this->assertEquals('create', $definition->getFactoryMethod());
+        $this->assertEquals('%exercise_html_purifier.config.class%', $definition->getFactory()[0]);
+        $this->assertEquals('create', $definition->getFactory()[1]);
         $this->assertEquals(array($config), $definition->getArguments());
     }
 

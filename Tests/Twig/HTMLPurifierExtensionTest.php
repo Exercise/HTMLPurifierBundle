@@ -3,8 +3,9 @@
 namespace Exercise\HTMLPurifierBundle\Tests\Twig;
 
 use Exercise\HTMLPurifierBundle\Twig\HTMLPurifierExtension;
+use PHPUnit\Framework\TestCase;
 
-class HTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
+class HTMLPurifierExtensionTest extends TestCase
 {
     /**
      * @dataProvider providePurifierProfiles
@@ -23,7 +24,7 @@ class HTMLPurifierExtensionTest extends \PHPUnit_Framework_TestCase
             ->with($input)
             ->will($this->returnValue($purifiedInput));
 
-        $container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
 
         $container->expects($this->once())
             ->method('get')
