@@ -3,8 +3,9 @@
 namespace Exercise\HTMLPurifierBundle\Tests\Form;
 
 use Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer;
+use PHPUnit\Framework\TestCase;
 
-class HTMLPurifierTransformerTest extends \PHPUnit_Framework_TestCase
+class HTMLPurifierTransformerTest extends TestCase
 {
     public function testShouldPurifyOnlyDuringReverseTransform()
     {
