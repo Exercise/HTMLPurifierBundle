@@ -2,10 +2,11 @@
 
 namespace Exercise\HTMLPurifierBundle\Tests\Twig;
 
-use Exercise\HTMLPurifierBundle\Twig\HTMLPurifierExtension;
+use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
+use Exercise\HTMLPurifierBundle\Twig\HTMLPurifierRuntime;
 use PHPUnit\Framework\TestCase;
 
-class HTMLPurifierExtensionTest extends TestCase
+class HTMLPurifierRuntimeTest extends TestCase
 {
     /**
      * @dataProvider providePurifierProfiles
@@ -24,23 +25,22 @@ class HTMLPurifierExtensionTest extends TestCase
             ->with($input)
             ->will($this->returnValue($purifiedInput));
 
-        $container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        $registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
 
-        $container->expects($this->once())
+        $registry->expects($this->once())
             ->method('get')
-            ->with('exercise_html_purifier.' . $profile)
-            ->will($this->returnValue($purifier));
+            ->with($profile)
+            ->will($this->returnValue($purifier))
+        ;
 
-        $extension = new HTMLPurifierExtension($container);
+        $extension = new HTMLPurifierRuntime($registry);
 
         $this->assertEquals($purifiedInput, $extension->purify($input, $profile));
     }
 
     public function providePurifierProfiles()
     {
-        return array(
-            array('default'),
-            array('custom'),
-        );
+        yield ['default'];
+        yield ['custom'];
     }
 }

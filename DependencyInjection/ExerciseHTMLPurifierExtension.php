@@ -2,19 +2,24 @@
 
 namespace Exercise\HTMLPurifierBundle\DependencyInjection;
 
+use Exercise\HTMLPurifierBundle\DependencyInjection\Compiler\HTMLPurifierPass;
+use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
+use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ExerciseHTMLPurifierExtension extends Extension
 {
+    /**
+     * {@inheritdoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+
         $loader->load('html_purifier.xml');
 
         /* Prepend the default configuration. This cannot be defined within the
@@ -25,77 +30,62 @@ class ExerciseHTMLPurifierExtension extends Extension
          * configuration (relying on canBeUnset() on the prototype node) or
          * setting the "Cache.SerializerPath" option to null.
          */
-        array_unshift($configs, array(
-            'default' => array(
+        array_unshift($configs, [
+            'default' => [
                 'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
-            ),
-        ));
+            ],
+        ]);
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
-        $configs = array_map(array($this, 'resolveServices'), $configs);
-        $paths = array();
+
+        $serializerPaths = [];
 
         foreach ($configs as $name => $config) {
-            $configDefinition = new Definition('%exercise_html_purifier.config.class%');
+            $configId = "exercise_html_purifier.config.$name";
+            $configDefinition = $container->register($configId, \HTMLPurifier_Config::class)
+                ->setPublic(false)
+            ;
 
             if ('default' === $name) {
                 $configDefinition
-                    ->setFactory(array('%exercise_html_purifier.config.class%', 'create'))
-                    ->addArgument($config);
+                    ->setFactory([\HTMLPurifier_Config::class, 'create'])
+                    ->addArgument($config)
+                ;
             } else {
                 $configDefinition
-                    ->setFactory(array('%exercise_html_purifier.config.class%', 'inherit'))
+                    ->setFactory([\HTMLPurifier_Config::class, 'inherit'])
                     ->addArgument(new Reference('exercise_html_purifier.config.default'))
-                    ->addMethodCall('loadArray', array($config));
+                    ->addMethodCall('loadArray', [$config])
+                ;
             }
 
-            $configId = 'exercise_html_purifier.config.' . $name;
-            $container->setDefinition($configId, $configDefinition);
-
-            $purifierDefinition = new Definition('%exercise_html_purifier.class%', array(new Reference($configId)));
-            $purifierDefinition->setPublic(true);
-
-            $container->setDefinition(
-                'exercise_html_purifier.' . $name,
-                $purifierDefinition
-            );
+            $container->register("exercise_html_purifier.$name", \HTMLPurifier::class)
+                ->addArgument(new Reference($configId))
+                ->addTag(HTMLPurifierPass::PURIFIER_TAG, ['profile' => $name])
+            ;
 
             if (isset($config['Cache.SerializerPath'])) {
-                $paths[] = $config['Cache.SerializerPath'];
+                $serializerPaths[] = $config['Cache.SerializerPath'];
             }
         }
 
-        $container->setParameter('exercise_html_purifier.cache_warmer.serializer.paths', array_unique($paths));
+        $container->register('exercise_html_purifier.purifiers_registry', HTMLPurifiersRegistry::class)
+            ->setPublic(false)
+        ;
+        $container->setAlias(HTMLPurifiersRegistryInterface::class, 'exercise_html_purifier.purifiers_registry')
+            ->setPublic(false)
+        ;
+        $container->setAlias(\HTMLPurifier::class, 'exercise_html_purifier.default')
+            ->setPublic(false)
+        ;
+        $container->setParameter('exercise_html_purifier.cache_warmer.serializer.paths', array_unique($serializerPaths));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAlias()
     {
         return 'exercise_html_purifier';
-    }
-
-    private function resolveServices($value)
-    {
-        if (is_array($value)) {
-            $value = array_map(array($this, 'resolveServices'), $value);
-        } else if (is_string($value) &&  0 === strpos($value, '@')) {
-            if (0 === strpos($value, '@?')) {
-                $value = substr($value, 2);
-                $invalidBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;
-            } else {
-                $value = substr($value, 1);
-                $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
-            }
-
-            if ('=' === substr($value, -1)) {
-                $value = substr($value, 0, -1);
-                $strict = false;
-            } else {
-                $strict = true;
-            }
-
-            $value = new Reference($value, $invalidBehavior, $strict);
-        }
-
-        return $value;
     }
 }

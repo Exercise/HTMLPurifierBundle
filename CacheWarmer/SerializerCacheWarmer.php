@@ -3,7 +3,6 @@
 namespace Exercise\HTMLPurifierBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
-use HTMLPurifier;
 
 /**
  * Cache warmer for creating HTMLPurifier's cache directory and contents.
@@ -17,23 +16,20 @@ use HTMLPurifier;
 class SerializerCacheWarmer implements CacheWarmerInterface
 {
     private $paths;
-
-    /** @var HTMLPurifier used to build cache within bundle runtime */
     private $htmlPurifier;
 
     /**
-     * Constructor.
-     *
-     * @param array $paths
+     * @param string[]      $paths
+     * @param \HTMLPurifier $htmlPurifier Used to build cache within bundle runtime
      */
-    public function __construct(array $paths, HTMLPurifier $htmlPurifier)
+    public function __construct(array $paths, \HTMLPurifier $htmlPurifier)
     {
         $this->paths = $paths;
         $this->htmlPurifier = $htmlPurifier;
     }
 
     /**
-     * @see \Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface::warmUp()
+     * {@inheritdoc}
      */
     public function warmUp($cacheDir)
     {
@@ -47,13 +43,14 @@ class SerializerCacheWarmer implements CacheWarmerInterface
             }
         }
 
-        // build htmlPurifier cache for HTML/CSS & URIs with the other Symfony cache warmups. Fixes issue #22
+        // build htmlPurifier cache for HTML/CSS & URIs with the other Symfony cache warmups.
+        // see https://github.com/Exercise/HTMLPurifierBundle/issues/22
         $this->htmlPurifier->purify('<div style="border: thick">-2</div>');
         $this->htmlPurifier->purify('<div style="background:url(\'http://www.example.com/x.gif\');">');
     }
 
     /**
-     * @see \Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface::isOptional()
+     * {@inheritdoc}
      */
     public function isOptional()
     {
