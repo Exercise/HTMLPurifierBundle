@@ -12,7 +12,8 @@
         "php": "^5.5.9|>=7.0.8",
         "ezyang/htmlpurifier": "~4.0",
         "symfony/dependency-injection": "~3.4.1 || ^4.0.1",
-        "symfony/http-kernel": "~3.4.1 || ^4.0.1"
+        "symfony/http-kernel": "~3.4.1 || ^4.0.1",
+        "symfony/config": "~3.3 || ~4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.2",
