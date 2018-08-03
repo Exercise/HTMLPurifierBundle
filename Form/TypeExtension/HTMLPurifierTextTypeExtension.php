@@ -39,7 +39,7 @@ class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
                 'purify_html_profile' => 'default',
             ])
             ->setAllowedTypes('purify_html', 'bool')
-            ->setAllowedTypes('purify_html_profile', 'string')
+            ->setAllowedTypes('purify_html_profile', ['string', 'null'])
             ->setNormalizer('purify_html_profile', function (Options $options, $profile) {
                 if (!$options['purify_html']) {
                     return null;
