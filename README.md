@@ -146,8 +146,8 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('content', TextareaType::class, ['purify_html' => 'true']) // will use default profile 
-            ->add('sneek_peak', TextType::class, ['purify_html' => 'true', 'purify_html_profile' => 'sneak_peak'])
+            ->add('content', TextareaType::class, ['purify_html' => true]) // will use default profile 
+            ->add('sneek_peak', TextType::class, ['purify_html' => true, 'purify_html_profile' => 'sneak_peak'])
             // ...
         ;
     }
@@ -201,7 +201,7 @@ Now your purifier can be used when:
 // In a form type
 $builder
     ->add('content', TextareaType::class, [
-        'purify_html' => 'true',
+        'purify_html' => true,
         'purify_html_profile' => 'custom',
     ])
     // ...
