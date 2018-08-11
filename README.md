@@ -1,4 +1,4 @@
-# ExerciseHTMLPurifierBundle
+# ExerciseHTMLPurifierBundle [![Build Status](https://travis-ci.org/Exercise/HTMLPurifierBundle.svg?branch=master)](https://travis-ci.org/Exercise/HTMLPurifierBundle)
 
 This bundle integrates [HTMLPurifier][] into Symfony.
 
