@@ -9,7 +9,7 @@
         { "name": "contributors", "homepage": "https://github.com/Exercise/HTMLPurifierBundle/contributors" }
     ],
     "require": {
-        "php": "^5.5.9|>=7.0.8",
+        "php": "^7.1.3",
         "ezyang/htmlpurifier": "~4.0",
         "symfony/dependency-injection": "~3.4.1 || ^4.0.1",
         "symfony/http-kernel": "~3.4.1 || ^4.0.1",
