@@ -14,7 +14,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
 {
     private $registry;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
 

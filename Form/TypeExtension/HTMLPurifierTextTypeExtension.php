@@ -23,15 +23,7 @@ class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
-    {
-        return TextType::class;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getExtendedTypes()
+    public static function getExtendedTypes(): iterable
     {
         return [TextType::class];
     }
