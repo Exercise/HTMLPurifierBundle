@@ -13,8 +13,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
 {
-    use ForwardCompatTypeExtensionTrait;
-
     private $purifiersRegistry;
 
     public function __construct(HTMLPurifiersRegistryInterface $registry)
@@ -30,7 +28,10 @@ class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
         return TextType::class;
     }
 
-    private static function doGetExtendedTypes()
+    /**
+     * {@inheritdoc}
+     */
+    public static function getExtendedTypes(): iterable
     {
         return [TextType::class];
     }

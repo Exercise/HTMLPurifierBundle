@@ -5,9 +5,9 @@ namespace Exercise\HTMLPurifierBundle\Tests\DependencyInjection\Compiler;
 use Exercise\HTMLPurifierBundle\DependencyInjection\Compiler\HTMLPurifierPass;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
-use Exercise\HTMLPurifierBundle\Tests\ForwardCompatTestTrait;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -16,12 +16,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class HTMLPurifierPassTest extends TestCase
 {
-    use ForwardCompatTestTrait;
-
     /** @var ContainerBuilder|MockObject */
     private $container;
 
-    private function doSetUp()
+    protected function setUp(): void
     {
         $this->container = $this->createPartialMock(ContainerBuilder::class, [
             'hasAlias',
@@ -31,7 +29,7 @@ class HTMLPurifierPassTest extends TestCase
         ]);
     }
 
-    private function doTearDown()
+    protected function tearDown(): void
     {
         $this->container = null;
     }
@@ -94,6 +92,22 @@ class HTMLPurifierPassTest extends TestCase
 
         $pass = new HTMLPurifierPass();
         $pass->process($this->container);
+    }
+
+    public function testProcessFailsIfTaggedServiceMissesProfileName()
+    {
+        $container = new ContainerBuilder();
+        $container->register(DummyPurifier::class)
+            ->addTag('exercise.html_purifier')
+        ;
+        $container->register('exercise_html_purifier.purifiers_registry', HTMLPurifiersRegistry::class);
+        $container->setAlias(HTMLPurifiersRegistryInterface::class, 'exercise_html_purifier.purifiers_registry');
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Tag "exercise.html_purifier" must define a "profile" attribute.');
+
+        $pass = new HTMLPurifierPass();
+        $pass->process($container);
     }
 }
 

@@ -12,16 +12,13 @@ class HTMLPurifierListener implements EventSubscriberInterface
     private $registry;
     private $profile;
 
-    /**
-     * @param string $profile
-     */
-    public function __construct(HTMLPurifiersRegistryInterface $registry, $profile)
+    public function __construct(HTMLPurifiersRegistryInterface $registry, string $profile)
     {
         $this->registry = $registry;
         $this->profile = $profile;
     }
 
-    public function purifySubmittedData(FormEvent $event)
+    public function purifySubmittedData(FormEvent $event): void
     {
         if (!is_scalar($data = $event->getData())) {
             // Hope there is a view transformer, otherwise an error might happen
@@ -49,10 +46,7 @@ class HTMLPurifierListener implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @return \HTMLPurifier
-     */
-    private function getPurifier()
+    private function getPurifier(): \HTMLPurifier
     {
         return $this->registry->get($this->profile);
     }

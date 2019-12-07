@@ -8,24 +8,22 @@ use Psr\Container\ContainerInterface;
 
 class HTMLPurifiersRegistryTest extends TestCase
 {
-    use ForwardCompatTestTrait;
-
     private $locator;
     private $registry;
 
-    private function doSetUp()
+    protected function setUp(): void
     {
         $this->locator = $this->createMock(ContainerInterface::class);
         $this->registry = new HTMLPurifiersRegistry($this->locator);
     }
 
-    private function doTearDown()
+    protected function tearDown(): void
     {
         $this->registry = null;
         $this->locator = null;
     }
 
-    public function provideProfiles()
+    public function provideProfiles(): iterable
     {
         yield ['default'];
         yield ['test'];

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit bootstrap="./vendor/autoload.php" colors="true">
-<!--
-    <php>
-        <server name="HTMLPURIFIER" value="../../htmlpurifier/library" />
-        <server name="SYMFONY" value="../../symfony/src" />
-        <server name="TWIG" value="../../twig/lib" />
-    </php>
--->
     <testsuites>
         <testsuite name="ExerciseHTMLPurifierBundle">
             <directory suffix="Test.php">./tests</directory>

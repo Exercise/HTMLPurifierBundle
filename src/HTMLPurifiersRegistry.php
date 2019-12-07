@@ -16,7 +16,7 @@ class HTMLPurifiersRegistry implements HTMLPurifiersRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function has($profile)
+    public function has(string $profile): bool
     {
         return $this->purifiersLocator->has($profile);
     }
@@ -24,7 +24,7 @@ class HTMLPurifiersRegistry implements HTMLPurifiersRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function get($profile)
+    public function get(string $profile): \HTMLPurifier
     {
         return $this->purifiersLocator->get($profile);
     }

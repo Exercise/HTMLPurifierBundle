@@ -5,26 +5,24 @@ namespace Exercise\HTMLPurifierBundle\Tests\Form\TypeExtension;
 use Exercise\HTMLPurifierBundle\Form\Listener\HTMLPurifierListener;
 use Exercise\HTMLPurifierBundle\Form\TypeExtension\HTMLPurifierTextTypeExtension;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
-use Exercise\HTMLPurifierBundle\Tests\ForwardCompatTestTrait;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Test\FormIntegrationTestCase;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
 {
-    use ForwardCompatTestTrait;
-
     private $registry;
 
-    private function doSetUp()
+    protected function setUp(): void
     {
         $this->registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
 
         parent::setUp();
     }
 
-    private function doTearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -71,7 +69,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
             ->method('get')
         ;
 
-        $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
+        $this->expectException(InvalidOptionsException::class);
         $this->expectExceptionMessage('The profile "default" is not registered.');
 
         $this->factory->create(TextType::class, null, ['purify_html' => true]);
@@ -108,7 +106,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
             ->method('get')
         ;
 
-        $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
+        $this->expectException(InvalidOptionsException::class);
         $this->expectExceptionMessage('The profile "test" is not registered.');
 
         $this->factory->create(TextType::class, null, [
@@ -117,10 +115,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         ]);
     }
 
-    /**
-     * @return bool
-     */
-    private function hasPurifierListener(FormInterface $form)
+    private function hasPurifierListener(FormInterface $form): bool
     {
         foreach ($form->getConfig()->getEventDispatcher()->getListeners(FormEvents::PRE_SUBMIT) as $listener) {
             if ($listener[0] instanceof HTMLPurifierListener) {

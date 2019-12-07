@@ -94,14 +94,14 @@ class HTMLPurifierListenerTest extends TestCase
         $listener->purifySubmittedData($event);
     }
 
-    public function provideInvalidInput()
+    public function provideInvalidInput(): iterable
     {
         yield [''];
         yield [[]];
         yield [new \stdClass()];
     }
 
-    private function getFormEvent($data)
+    private function getFormEvent($data): FormEvent
     {
         return new FormEvent($this->createMock(FormInterface::class), $data);
     }

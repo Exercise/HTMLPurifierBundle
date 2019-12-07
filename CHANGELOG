@@ -1,3 +1,30 @@
+## Version 3.0 (12/2019)
+
+ * [BC break] Dropped support for PHP 5.x. PHP 7.1 minimum required.
+ * [BC break] Added type hints for scalar and return type hints where possible.
+ * [BC Break] The bundle configuration has changed:
+    ```yaml
+    # Before
+    exercise_html_purifier:
+        default:
+            Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+            # ...
+        custom:
+            Core.Encoding: 'ISO-8859-1'
+         
+    # After
+    exercise_html_purifier:
+        default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
+        html_profiles:
+            default:
+                # ...
+            custom:
+                config:
+                    Core.Encoding: 'ISO-8859-1'
+    ```
+ * Added an `HTMLPurifierConfigFactory` to handle cache and custom definitions.
+ * Refactored `SerializerCacheWarmer` to preload each profile configuration
+
 ## Version 2.0 (08/2018)
 
  * Added compatibility for Symfony 5 and Twig 3
