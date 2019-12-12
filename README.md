@@ -90,9 +90,10 @@ exercise_html_purifier:
         Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
 ```
 
-The `default` profile is special in that it is used as the configuration for the
-`exercise_html_purifier.default` service as well as the base configuration for
-other profiles you might define.
+The `default` profile is special, it is *always* defined and its configuration
+is inherited by all custom profiles.
+`exercise_html_purifier.default` is the default service using the base
+configuration.
 
 ```yaml
 # config/packages/exercise_html_purifier.yaml
@@ -115,12 +116,23 @@ this in you `app/config/services.yml` or `config/services.yaml`:
 services:
     # ...
 
-    \HTMLPurifier:
-        alias: exercise_html_purifier.custom
-        
-    # or the equivalent as of Symfony 3.3
-    \HTMLPurifier: '@exercise_html_purifier.custom'
+    exercise_html_purifier.default: '@exercise_html_purifier.custom'
 ```
+
+## Using a custom purifier class as default
+
+If you want to use your own class as default purifier, define a new alias:
+
+```yaml
+# config/services.yaml
+services:
+    # ...
+
+    exercise_html_purifier.default: '@App\Html\CustomHtmlPurifier'
+```
+
+In such case, the custom purifier will use its own defined configuration,
+ignoring the bundle configuration.
 
 ## Form Type Extension
 
@@ -212,5 +224,7 @@ $builder
 {{ html_string|purify('custom') }}
 ```
 
-Your class will inherit the default config or the one from the same profile
-used in the tag.
+## Contributing
+
+PRs are welcomed :). Please target the `2.0` branch for bug fixes and `master`
+for new features.
