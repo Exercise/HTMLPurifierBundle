@@ -12,8 +12,8 @@ class HTMLPurifierExtension extends AbstractExtension
      */
     public function getFilters()
     {
-        return array(
+        return [
             new TwigFilter('purify', [HTMLPurifierRuntime::class, 'purify'], ['is_safe' => ['html']]),
-        );
+        ];
     }
 }

@@ -5,6 +5,7 @@ namespace Exercise\HTMLPurifierBundle\Tests\Form\TypeExtension;
 use Exercise\HTMLPurifierBundle\Form\Listener\HTMLPurifierListener;
 use Exercise\HTMLPurifierBundle\Form\TypeExtension\HTMLPurifierTextTypeExtension;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
+use Exercise\HTMLPurifierBundle\Tests\ForwardCompatTestTrait;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -12,13 +13,22 @@ use Symfony\Component\Form\Test\FormIntegrationTestCase;
 
 class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
 {
+    use ForwardCompatTestTrait;
+
     private $registry;
 
-    protected function setUp()
+    private function doSetUp()
     {
         $this->registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
 
         parent::setUp();
+    }
+
+    private function doTearDown()
+    {
+        parent::tearDown();
+
+        $this->registry = null;
     }
 
     protected function getTypeExtensions()
@@ -48,10 +58,6 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->assertFalse($this->hasPurifierListener($form));
     }
 
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     * @expectedExceptionMessage The profile "default" is not registered.
-     */
     public function testPurifyOptionsNeedDefaultProfile()
     {
         $this->registry
@@ -62,8 +68,11 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         ;
         $this->registry
             ->expects($this->never())
-            ->method('get');
+            ->method('get')
         ;
+
+        $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
+        $this->expectExceptionMessage('The profile "default" is not registered.');
 
         $this->factory->create(TextType::class, null, ['purify_html' => true]);
     }
@@ -86,10 +95,6 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->assertTrue($this->hasPurifierListener($form));
     }
 
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     * @expectedExceptionMessage The profile "test" is not registered.
-     */
     public function testInvalidProfile()
     {
         $this->registry
@@ -103,6 +108,9 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
             ->method('get')
         ;
 
+        $this->expectException('Symfony\Component\OptionsResolver\Exception\InvalidOptionsException');
+        $this->expectExceptionMessage('The profile "test" is not registered.');
+
         $this->factory->create(TextType::class, null, [
             'purify_html' => true,
             'purify_html_profile' => 'test',
@@ -110,8 +118,6 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
     }
 
     /**
-     * @param FormInterface $form
-     *
      * @return bool
      */
     private function hasPurifierListener(FormInterface $form)

@@ -5,6 +5,8 @@ namespace Exercise\HTMLPurifierBundle\Tests\DependencyInjection\Compiler;
 use Exercise\HTMLPurifierBundle\DependencyInjection\Compiler\HTMLPurifierPass;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
+use Exercise\HTMLPurifierBundle\Tests\ForwardCompatTestTrait;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -14,21 +16,40 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class HTMLPurifierPassTest extends TestCase
 {
+    use ForwardCompatTestTrait;
+
+    /** @var ContainerBuilder|MockObject */
+    private $container;
+
+    private function doSetUp()
+    {
+        $this->container = $this->createPartialMock(ContainerBuilder::class, [
+            'hasAlias',
+            'findDefinition',
+            'findTaggedServiceIds',
+            'getDefinition',
+        ]);
+    }
+
+    private function doTearDown()
+    {
+        $this->container = null;
+    }
+
     public function testProcessOnlyIfRegistryInterfaceIsDefined()
     {
-        $container = $this->createMock(ContainerBuilder::class);
-        $container->expects($this->once())
+        $this->container->expects($this->once())
             ->method('hasAlias')
             ->with(HTMLPurifiersRegistryInterface::class)
             ->willReturn(false)
         ;
-        $container->expects($this->never())
+        $this->container->expects($this->never())
             ->method('findDefinition')
         ;
 
         $pass = new HTMLPurifierPass();
 
-        $pass->process($container);
+        $pass->process($this->container);
     }
 
     public function testProcess()
@@ -54,27 +75,28 @@ class HTMLPurifierPassTest extends TestCase
 
     public function testProcessDoNothingIfRegistryIsNotDefined()
     {
-        $container = $this->createMock(ContainerBuilder::class);
-        $container
+        $this->container
             ->expects($this->once())
             ->method('hasAlias')
             ->with(HTMLPurifiersRegistryInterface::class)
             ->willReturn(true)
         ;
-        $container
+        $this->container
             ->expects($this->once())
             ->method('findDefinition')
             ->with(HTMLPurifiersRegistryInterface::class)
             ->willThrowException($this->createMock(ServiceNotFoundException::class))
         ;
-        $container
+        $this->container
             ->expects($this->never())
             ->method('findTaggedServiceIds')
         ;
 
         $pass = new HTMLPurifierPass();
-        $pass->process($container);
+        $pass->process($this->container);
     }
 }
 
-class DummyPurifier extends \HTMLPurifier {}
+class DummyPurifier extends \HTMLPurifier
+{
+}
