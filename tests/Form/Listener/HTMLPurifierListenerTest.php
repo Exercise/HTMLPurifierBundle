@@ -1,6 +1,6 @@
 <?php
 
-namespace Exercise\HTMLPurifierBundle\Tests\Form;
+namespace Exercise\HTMLPurifierBundle\Tests\Form\Listener;
 
 use Exercise\HTMLPurifierBundle\Form\Listener\HTMLPurifierListener;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
