@@ -1,0 +1,14 @@
+## Version 2.0 (08/2018)
+
+ * Added compatibility for Symfony 5 and Twig 3
+ * Updated minimum requirement of Twig to 1.35 and 2.4 to support runtime
+ * [BC break] Dropped support for Symfony 2. Symfony 3.4 minimum required.
+ * [BC break] Removed classes parameters.
+ * [BC break] Removed the form data transformer.
+ * Added an `HTMLPurifierTextTypeExtension` to add `purify_html` and
+   `purify_html_profile` options to all `TextType` children.
+ * Added an `HTMLPurifierListener` to purify submitted form data.
+ * Added an `HTMLPurifiersRegistryInterface` to lazy load purifiers by profile.
+ * Added a Twig `HTMLPurifierRuntime` to lazy load purifiers in templates.
+ * Added a pass to use custom `\HTMLPurifier` classes as custom profiles using
+   a new `exercise.html_purifier` tag.
