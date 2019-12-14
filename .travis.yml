@@ -17,11 +17,10 @@ cache:
 jobs:
     include:
         # Lowest
-        - php: 5.5
-          dist: trusty
-          env: NO_FLEX=1 COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
         - php: 7.1
-          env: SYMFONY_REQUIRE="4.3.*" COMPOSER_FLAGS="--prefer-lowest"
+          env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
+        - php: 7.1
+          env: SYMFONY_REQUIRE="4.3.*" COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
 
         # Stable
         - php: 7.2
@@ -54,7 +53,7 @@ jobs:
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
   - composer self-update
-  - if [[ -z $NO_FLEX ]]; then composer global require --no-progress --no-scripts --no-plugins symfony/flex; fi;
+  - composer global require --no-progress --no-scripts --no-plugins symfony/flex
 
 install:
   - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS

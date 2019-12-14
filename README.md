@@ -1,7 +1,7 @@
 [![Total Downloads](https://poser.pugx.org/exercise/htmlpurifier-bundle/downloads)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
 [![Latest Stable Version](https://poser.pugx.org/exercise/htmlpurifier-bundle/v/stable)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
 [![License](https://poser.pugx.org/exercise/htmlpurifier-bundle/license)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
-[![Build Status](https://travis-ci.org/Exercise/HTMLPurifierBundle.svg?branch=2.0)](https://travis-ci.org/Exercise/HTMLPurifierBundle)
+[![Build Status](https://travis-ci.org/Exercise/HTMLPurifierBundle.svg?branch=master)](https://travis-ci.org/Exercise/HTMLPurifierBundle)
 
 # ExerciseHTMLPurifierBundle
 
@@ -36,14 +36,14 @@ Register the bundle in Symfony 3:
 
 public function registerBundles()
 {
-    return array(
-        new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
+    return [
         // ...
-    );
+        new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
+    ];
 }
 ```
 
-## Configuration in Symfony 3 without Symfony Flex
+## Configuration in Symfony 3
 
 If you do not explicitly configure this bundle, an HTMLPurifier service will be
 defined as `exercise_html_purifier.default`. This behavior is the same as if you
@@ -53,8 +53,7 @@ had specified the following configuration:
 # app/config.yml
 
 exercise_html_purifier:
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
 ```
 
 The `default` profile is special in that it is used as the configuration for the
@@ -65,10 +64,11 @@ other profiles you might define.
 # app/config.yml
 
 exercise_html_purifier:
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
-    custom:
-        Core.Encoding: 'ISO-8859-1'
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
+    html_profiles:
+        custom:
+            config:
+                Core.Encoding: 'ISO-8859-1'
 ```
 
 In this example, a `exercise_html_purifier.custom` service will also be defined,
@@ -81,7 +81,7 @@ option to suppress the default path.
 
   [configuration documentation]: http://htmlpurifier.org/live/configdoc/plain.html
 
-## Configuration using Symfony Flex
+## Configuration in Symfony 4 and up
 
 If you do not explicitly configure this bundle, an HTMLPurifier service will be
 defined as `exercise_html_purifier.default`. This behavior is the same as if you
@@ -91,8 +91,7 @@ had specified the following configuration:
 # config/packages/exercise_html_purifier.yaml
 
 exercise_html_purifier:
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
 ```
 
 The `default` profile is special, it is *always* defined and its configuration
@@ -104,27 +103,33 @@ configuration.
 # config/packages/exercise_html_purifier.yaml
 
 exercise_html_purifier:
-    default:
-        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
-    custom:
-        Core.Encoding: 'ISO-8859-1'
+    default_cache_serializer_path: 'tmp/htmlpurifier'
+    html_profiles:
+        default:
+            config:
+                Cache.SerializerPermissions: 777 
+        custom:
+            config:
+                Core.Encoding: 'ISO-8859-1'
 ```
-  
+
 ## Autowiring
 
 By default type hinting `\HtmlPurifier` in your services will autowire
 the `exercise_html_purifier.default` service.
 To override it and use your own config as default autowired services just add
-this in you `app/config/services.yml` or `config/services.yaml`:
+this in you `app/config/services.yml` in you use symfony 3 or `config/services.yaml`
+if you use symfony 4:
 
 ```yaml
+# config/services.yaml
 services:
-    # ...
-
+    #...
+    
     exercise_html_purifier.default: '@exercise_html_purifier.custom'
 ```
 
-## Using a custom purifier class as default
+### Using a custom purifier class as default
 
 If you want to use your own class as default purifier, define a new alias:
 
@@ -138,6 +143,29 @@ services:
 
 In such case, the custom purifier will use its own defined configuration,
 ignoring the bundle configuration.
+
+### Argument binding
+
+The bundle also leverages the alias argument binding for each profile. So the
+following config:
+
+```yaml
+    html_profiles:
+        blog:
+            # ...
+        gallery:
+            # ...
+```
+
+will register the following binding:
+
+```php
+ // default config is bound whichever argument name is used
+public function __construct(\HTMLPurifier $purifier) {}
+public function __construct(\HTMLPurifier $htmlPurifier) {}
+public function __construct(\HTMLPurifier $blogPurifier) {} // blog config
+public function __construct(\HTMLPurifier $galleryPurifier) {} // gallery config
+```
 
 ## Form Type Extension
 
@@ -228,6 +256,128 @@ $builder
 {# in a template #}
 {{ html_string|purify('custom') }}
 ```
+
+## How to Customize a Config Definition
+
+# Custom Attributes
+
+In some case, you might want to set some rules for a specific tag.
+This is what the following config is about:
+
+```yaml
+# config/packages/exercise_html_purifier.yaml
+exercise_html_purifier:
+    html_profiles:
+        default:
+            config:
+                HTML.Allowed: <
+                    *[id|class|name],
+                    a[href|title|rel|target],
+                    img[src|alt|height|width],
+                    br,div,embed,object,u,em,ul,ol,li,strong,span
+            attributes:
+                img:
+                    # attribute name, type (Integer, Color, ...)
+                    data-id: ID
+                    data-image-size: Text
+                span:
+                    data-link: URI
+```
+
+See [HTMLPurifier_AttrTypes][] for more options.
+
+  [HTMLPurifier_AttrTypes]: https://github.com/ezyang/htmlpurifier/blob/master/library/HTMLPurifier/AttrTypes.php
+
+# Custom Elements
+
+In some case, you might want to set some rules for a specific tag.
+This is what the following config is about:
+
+```yaml
+# config/packages/exercise_html_purifier.yaml
+exercise_html_purifier:
+    html_profiles:
+        default:
+            # ...
+            elements:
+                video:
+                    - Block
+                    - 'Optional: (source, Flow) | (Flow, source) | Flow'
+                    - Common # allows a set of common attributes
+                    # The 4th and 5th arguments are optional
+                    - src: URI # list of type rules by attributes
+                      type: Text
+                      width: Length
+                      height: Length
+                      poster: URI
+                      preload: 'Enum#auto,metadata,none'
+                      controls: Bool
+                source:
+                    - Block
+                    - Flow
+                    - Common
+                    - { src: URI, type: Text }
+                    - [style] # list of forbidden attributes
+```
+
+Would be equivalent to:
+
+```php
+$def = $config->getHTMLDefintion(true);
+$def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', [
+    'src' => 'URI',
+    'type' => 'Text',
+    'width' => 'Length',
+    'height' => 'Length',
+    'poster' => 'URI',
+    'preload' => 'Enum#auto,metadata,none',
+    'controls' => 'Bool',
+]);
+$source = $def->addElement('source', 'Block', 'Flow', 'Common', [
+    'src' => 'URI',
+    'type' => 'Text',
+]);
+$source->excludes = ['style' => true];
+```
+
+See [HTMLPurifier documentation][] for more details.
+
+  [HTMLPurifier documentation]: http://htmlpurifier.org/docs/enduser-customize.html
+
+# Blank Elements
+
+It might happen that you need a tag clean from any attributes.
+Then just add it to the list:
+
+```yaml
+# config/packages/exercise_html_purifier.yaml
+exercise_html_purifier:
+    html_profiles:
+        default:
+            # ...
+            blank_elements: [legend, figcaption]
+```
+
+## How to Reuse Profiles
+
+What can really convenient is to reuse some profile definition
+to build other custom definitions.
+
+```yaml
+# config/packages/exercise_html_purifier.yaml
+exercise_html_purifier:
+    html_profiles:
+        base:
+            # ...
+        video:
+            # ...
+        all:
+            parents: [base, video]
+```
+
+In this example the profile named "all" will inherit the "default" profile,
+then the two custom ones. The order is important as each profile overrides the
+previous, and "all" could define its own rules too.
 
 ## Contributing
 

@@ -3,46 +3,60 @@
 namespace Exercise\HTMLPurifierBundle\Tests\CacheWarmer;
 
 use Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer;
+use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 class SerializerCacheWarmerTest extends TestCase
 {
     public function testShouldBeRequired()
     {
-        $cacheWarmer = new SerializerCacheWarmer([], new \HTMLPurifier());
+        $cacheWarmer = new SerializerCacheWarmer([], [], $this->createMock(HTMLPurifiersRegistryInterface::class), new Filesystem());
+
         $this->assertFalse($cacheWarmer->isOptional());
     }
 
-    public function testFailsWhenNotWriteable()
+    public function testWarmUpShouldCreatePaths()
     {
-        $path = sys_get_temp_dir().'/'.uniqid('htmlpurifierbundle_fails');
+        $fs = new Filesystem();
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.'html_purifier';
 
-        if (false === @mkdir($path, 0000)) {
-            $this->markTestSkipped('Tmp dir is not writeable.');
+        if ($fs->exists($path)) {
+            $fs->remove($path);
         }
 
-        $this->expectException('RuntimeException');
+        $this->assertFalse($fs->exists($path));
 
-        $cacheWarmer = new SerializerCacheWarmer([$path], new \HTMLPurifier());
+        $cacheWarmer = new SerializerCacheWarmer([$path], [], $this->createMock(HTMLPurifiersRegistryInterface::class), $fs);
         $cacheWarmer->warmUp(null);
 
-        @rmdir($path);
+        $this->assertTrue($fs->exists($path));
+
+        $fs->remove($path);
     }
 
-    public function testShouldCreatePaths()
+    public function testWarmUpShouldCallPurifyForEachProfile()
     {
-        if (!is_writable(sys_get_temp_dir())) {
-            $this->markTestSkipped(sprintf('The system temp directory "%s" is not writeable for the current system user.', sys_get_temp_dir()));
-        }
+        $purifier = $this->createMock(\HTMLPurifier::class);
+        $purifier->expects($this->exactly(2))
+            ->method('purify')
+        ;
 
-        $path = sys_get_temp_dir().'/'.uniqid('htmlpurifierbundle');
+        $registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
+        $registry->expects($this->exactly(2))
+            ->method('get')
+            ->willReturn($purifier)
+        ;
+        $registry->expects($this->at(0))
+            ->method('get')
+            ->with('first')
+        ;
+        $registry->expects($this->at(1))
+            ->method('get')
+            ->with('second')
+        ;
 
-        $cacheWarmer = new SerializerCacheWarmer([$path], new \HTMLPurifier());
+        $cacheWarmer = new SerializerCacheWarmer([], ['first', 'second'], $registry, new Filesystem());
         $cacheWarmer->warmUp(null);
-
-        $this->assertTrue(is_dir($path));
-        $this->assertTrue(is_writeable($path));
-
-        rmdir($path);
     }
 }

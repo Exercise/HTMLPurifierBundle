@@ -22,7 +22,7 @@ class HTMLPurifierRuntime implements RuntimeExtensionInterface
      *
      * @return string The purified html string
      */
-    public function purify($string, $profile = 'default')
+    public function purify(string $string, string $profile = 'default'): string
     {
         return $this->getHTMLPurifierForProfile($profile)->purify($string);
     }
@@ -30,13 +30,9 @@ class HTMLPurifierRuntime implements RuntimeExtensionInterface
     /**
      * Gets the HTMLPurifier service corresponding to the given profile.
      *
-     * @param string $profile
-     *
-     * @return \HTMLPurifier
-     *
      * @throws \InvalidArgumentException If the profile does not exist
      */
-    private function getHTMLPurifierForProfile($profile)
+    private function getHTMLPurifierForProfile(string $profile): \HTMLPurifier
     {
         return $this->purifiersRegistry->get($profile);
     }

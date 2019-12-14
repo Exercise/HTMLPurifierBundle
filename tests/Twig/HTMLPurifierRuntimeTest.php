@@ -38,7 +38,7 @@ class HTMLPurifierRuntimeTest extends TestCase
         $this->assertEquals($purifiedInput, $extension->purify($input, $profile));
     }
 
-    public function providePurifierProfiles()
+    public function providePurifierProfiles(): iterable
     {
         yield ['default'];
         yield ['custom'];

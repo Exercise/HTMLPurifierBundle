@@ -4,8 +4,10 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="exercise_html_purifier.cache_warmer.serializer" class="Exercise\HTMLPurifierBundle\CacheWarmer\SerializerCacheWarmer" public="false">
-            <argument>%exercise_html_purifier.cache_warmer.serializer.paths%</argument>
-            <argument type="service" id="HTMLPurifier" />
+            <argument /><!-- cache paths -->
+            <argument /><!-- profiles -->
+            <argument type="service" id="Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface" />
+            <argument type="service" id="filesystem" />
             <tag name="kernel.cache_warmer" />
         </service>
 
