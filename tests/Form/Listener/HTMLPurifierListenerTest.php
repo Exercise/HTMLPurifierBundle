@@ -1,6 +1,6 @@
 <?php
 
-namespace Exercise\HTMLPurifierBundle\Tests\Form;
+namespace Exercise\HTMLPurifierBundle\Tests\Form\Listener;
 
 use Exercise\HTMLPurifierBundle\Form\Listener\HTMLPurifierListener;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
@@ -41,6 +41,32 @@ class HTMLPurifierListenerTest extends TestCase
         $this->assertSame($purifiedInput, $event->getData());
     }
 
+    public function testPurifyTrimEmptyValues()
+    {
+        $input = ' ';
+        $trimmedInput = '';
+
+        $purifier = $this->createMock('HTMLPurifier');
+        $purifier
+            ->expects($this->never())
+            ->method('purify')
+        ;
+
+        $registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
+        $registry
+            ->expects($this->never())
+            ->method('get')
+        ;
+
+        $listener = new HTMLPurifierListener($registry, 'test');
+
+        $event = $this->getFormEvent($input);
+
+        $listener->purifySubmittedData($event);
+
+        $this->assertSame($trimmedInput, $event->getData());
+    }
+
     /**
      * @dataProvider provideInvalidInput
      */
@@ -71,7 +97,6 @@ class HTMLPurifierListenerTest extends TestCase
     public function provideInvalidInput()
     {
         yield [''];
-        yield [' '];
         yield [[]];
         yield [new \stdClass()];
     }

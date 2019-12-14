@@ -6,26 +6,36 @@
     "homepage": "https://github.com/Exercise/HTMLPurifierBundle",
     "license": "MIT",
     "authors": [
-        { "name": "contributors", "homepage": "https://github.com/Exercise/HTMLPurifierBundle/contributors" }
+        {
+            "name": "contributors",
+            "homepage": "https://github.com/Exercise/HTMLPurifierBundle/contributors"
+        }
     ],
     "require": {
         "php": "^5.5.9|>=7.0.8",
         "ezyang/htmlpurifier": "~4.0",
-        "symfony/dependency-injection": "~3.4.1 || ^4.0.1",
-        "symfony/http-kernel": "~3.4.1 || ^4.0.1",
-        "symfony/config": "~3.3 || ~4.0"
+        "symfony/config": "~3.4 || ~4.0 || ^5.0",
+        "symfony/dependency-injection": "~3.4.1 || ^4.0.1 || ^5.0",
+        "symfony/http-kernel": "~3.4.1 || ^4.0.1 || ^5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.2",
-        "symfony/form": "~3.4.1 || ^4.0.1",
-        "twig/twig": "^1.34.4 || ^2.4.3"
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "symfony/form": "~3.4.1 || ^4.0.1 || ^5.0",
+        "symfony/phpunit-bridge": "4.4.*",
+        "twig/twig": "^1.35.0 || ^2.4.4 || ^3.0"
+    },
+    "autoload": {
+        "psr-4": { "Exercise\\HTMLPurifierBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Exercise\\HTMLPurifierBundle\\Tests\\": "tests/" }
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
-    },
-    "autoload": {
-        "psr-4": { "Exercise\\HTMLPurifierBundle\\": "" }
     }
 }
