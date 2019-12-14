@@ -9,8 +9,24 @@ class SerializerCacheWarmerTest extends TestCase
 {
     public function testShouldBeRequired()
     {
-        $cacheWarmer = new SerializerCacheWarmer(array(), new \HTMLPurifier());
+        $cacheWarmer = new SerializerCacheWarmer([], new \HTMLPurifier());
         $this->assertFalse($cacheWarmer->isOptional());
+    }
+
+    public function testFailsWhenNotWriteable()
+    {
+        $path = sys_get_temp_dir().'/'.uniqid('htmlpurifierbundle_fails');
+
+        if (false === @mkdir($path, 0000)) {
+            $this->markTestSkipped('Tmp dir is not writeable.');
+        }
+
+        $this->expectException('RuntimeException');
+
+        $cacheWarmer = new SerializerCacheWarmer([$path], new \HTMLPurifier());
+        $cacheWarmer->warmUp(null);
+
+        @rmdir($path);
     }
 
     public function testShouldCreatePaths()
@@ -19,9 +35,9 @@ class SerializerCacheWarmerTest extends TestCase
             $this->markTestSkipped(sprintf('The system temp directory "%s" is not writeable for the current system user.', sys_get_temp_dir()));
         }
 
-        $path = sys_get_temp_dir() . '/' . uniqid('htmlpurifierbundle');
+        $path = sys_get_temp_dir().'/'.uniqid('htmlpurifierbundle');
 
-        $cacheWarmer = new SerializerCacheWarmer(array($path), new \HTMLPurifier());
+        $cacheWarmer = new SerializerCacheWarmer([$path], new \HTMLPurifier());
         $cacheWarmer->warmUp(null);
 
         $this->assertTrue(is_dir($path));

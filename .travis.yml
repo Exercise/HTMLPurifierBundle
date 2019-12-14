@@ -1,5 +1,66 @@
 language: php
-php:
-    - '7.1'
-install: composer install
-script: php vendor/bin/phpunit
+
+sudo: false
+
+dist: xenial
+
+env:
+    global:
+        - COMPOSER_MEMORY_LIMIT=-1
+        - SYMFONY_PHPUNIT_DIR=$HOME/.phpunit-bridge
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+        - $HOME/.phpunit-bridge
+
+jobs:
+    include:
+        # Lowest
+        - php: 5.5
+          dist: trusty
+          env: NO_FLEX=1 COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
+        - php: 7.1
+          env: SYMFONY_REQUIRE="4.3.*" COMPOSER_FLAGS="--prefer-lowest"
+
+        # Stable
+        - php: 7.2
+          env: SYMFONY_REQUIRE="3.4.*" COMPOSER_FLAGS="--prefer-stable"
+        - php: 7.3
+          env: SYMFONY_REQUIRE="4.4.*" COMPOSER_FLAGS="--prefer-stable"
+        - php: 7.4
+          env: SYMFONY_REQUIRE="5.0.*" COMPOSER_FLAGS="--prefer-stable"
+
+        # Dev
+        - php: 7.4
+          env: STABILITY=dev
+
+        # QA
+        - stage: QA
+          name: PHP CS Fixer
+          php: 7.4
+          script: vendor/bin/php-cs-fixer fix --dry-run --diff
+        - name: Coverage
+          php: 7.4
+          before_script:
+            - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
+            - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
+          script:
+            - ./vendor/bin/simple-phpunit -v --coverage-text
+
+    allow_failures:
+        - env: STABILITY=dev
+
+before_install:
+  - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+  - composer self-update
+  - if [[ -z $NO_FLEX ]]; then composer global require --no-progress --no-scripts --no-plugins symfony/flex; fi;
+
+install:
+  - composer update --prefer-dist --no-interaction $COMPOSER_FLAGS
+  - vendor/bin/simple-phpunit install
+
+script:
+  - if [[ -v $STABILITY ]]; then composer config minimum-stability $STABILITY; fi;
+  - composer validate --strict --no-check-lock
+  - vendor/bin/simple-phpunit -v

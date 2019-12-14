@@ -6,12 +6,15 @@ use Exercise\HTMLPurifierBundle\DependencyInjection\Compiler\HTMLPurifierPass;
 use Exercise\HTMLPurifierBundle\DependencyInjection\ExerciseHTMLPurifierExtension;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
+use Exercise\HTMLPurifierBundle\Tests\ForwardCompatTestTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ExerciseHTMLPurifierExtensionTest extends TestCase
 {
+    use ForwardCompatTestTrait;
+
     /**
      * @var ContainerBuilder
      */
@@ -27,13 +30,20 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
      */
     private $defaultConfig;
 
-    public function setUp()
+    private function doSetUp()
     {
         $this->container = new ContainerBuilder();
         $this->extension = new ExerciseHTMLPurifierExtension();
         $this->defaultConfig = [
             'Cache.SerializerPath' => '%kernel.cache_dir%/htmlpurifier',
         ];
+    }
+
+    private function doTearDown()
+    {
+        $this->defaultConfig = null;
+        $this->extension = null;
+        $this->container = null;
     }
 
     public function testShouldLoadDefaultConfiguration()
@@ -95,7 +105,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
                 'AutoFormat.Linkify' => true,
                 'AutoFormat.RemoveEmpty' => true,
                 'AutoFormat.RemoveEmpty.RemoveNbsp' => true,
-                'HTML.Allowed' => "a[href],strong,em,p,li,ul,ol",
+                'HTML.Allowed' => 'a[href],strong,em,p,li,ul,ol',
             ],
             'advanced' => [
                 'Cache.DefinitionImpl' => null,
@@ -119,13 +129,12 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
      * loads the given options.
      *
      * @param string $name
-     * @param array  $config
      */
     private function assertConfigDefinition($name, array $config)
     {
-        $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.' . $name));
+        $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.'.$name));
 
-        $definition = $this->container->getDefinition('exercise_html_purifier.config.' . $name);
+        $definition = $this->container->getDefinition('exercise_html_purifier.config.'.$name);
 
         $this->assertSame([\HTMLPurifier_Config::class, 'inherit'], $definition->getFactory());
 
@@ -137,8 +146,6 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
 
     /**
      * Asserts that the default config definition loads the given options.
-     *
-     * @param array $config
      */
     private function assertDefaultConfigDefinition(array $config)
     {
@@ -156,7 +163,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
      */
     private function assertRegistryHasProfiles(array $profiles)
     {
-        $this->assertTrue($this->container->hasAlias(HTMLPurifiersRegistryInterface::class), "The registry interface alias must exist.");
+        $this->assertTrue($this->container->hasAlias(HTMLPurifiersRegistryInterface::class), 'The registry interface alias must exist.');
 
         try {
             $registry = $this->container->findDefinition(HTMLPurifiersRegistryInterface::class);
@@ -180,8 +187,6 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
 
     /**
      * Assert that the cache warmer serializer paths equal the given array.
-     *
-     * @param array $paths
      */
     private function assertCacheWarmerSerializerPaths(array $paths)
     {

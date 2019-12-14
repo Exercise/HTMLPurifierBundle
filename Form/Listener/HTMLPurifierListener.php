@@ -13,8 +13,7 @@ class HTMLPurifierListener implements EventSubscriberInterface
     private $profile;
 
     /**
-     * @param HTMLPurifiersRegistryInterface $registry
-     * @param string                         $profile
+     * @param string $profile
      */
     public function __construct(HTMLPurifiersRegistryInterface $registry, $profile)
     {
