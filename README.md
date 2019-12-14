@@ -259,7 +259,7 @@ $builder
 
 ## How to Customize a Config Definition
 
-# Custom Attributes
+### Whitelist Attributes
 
 In some case, you might want to set some rules for a specific tag.
 This is what the following config is about:
@@ -288,7 +288,7 @@ See [HTMLPurifier_AttrTypes][] for more options.
 
   [HTMLPurifier_AttrTypes]: https://github.com/ezyang/htmlpurifier/blob/master/library/HTMLPurifier/AttrTypes.php
 
-# Custom Elements
+### Whitelist Elements
 
 In some case, you might want to set some rules for a specific tag.
 This is what the following config is about:
@@ -344,7 +344,7 @@ See [HTMLPurifier documentation][] for more details.
 
   [HTMLPurifier documentation]: http://htmlpurifier.org/docs/enduser-customize.html
 
-# Blank Elements
+### Blank Elements
 
 It might happen that you need a tag clean from any attributes.
 Then just add it to the list:
