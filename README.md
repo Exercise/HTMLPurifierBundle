@@ -1,4 +1,9 @@
-# ExerciseHTMLPurifierBundle [![Build Status](https://travis-ci.org/Exercise/HTMLPurifierBundle.svg?branch=master)](https://travis-ci.org/Exercise/HTMLPurifierBundle)
+[![Total Downloads](https://poser.pugx.org/exercise/htmlpurifier-bundle/downloads)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
+[![Latest Stable Version](https://poser.pugx.org/exercise/htmlpurifier-bundle/v/stable)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
+[![License](https://poser.pugx.org/exercise/htmlpurifier-bundle/license)](https://packagist.org/packages/exercise/htmlpurifier-bundle)
+[![Build Status](https://travis-ci.org/Exercise/HTMLPurifierBundle.svg?branch=2.0)](https://travis-ci.org/Exercise/HTMLPurifierBundle)
+
+# ExerciseHTMLPurifierBundle
 
 This bundle integrates [HTMLPurifier][] into Symfony.
 
