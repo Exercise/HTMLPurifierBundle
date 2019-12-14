@@ -10,17 +10,15 @@
 -->
     <testsuites>
         <testsuite name="ExerciseHTMLPurifierBundle">
-            <directory suffix="Test.php">./Tests</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./</directory>
+            <directory suffix=".php">./src</directory>
             <exclude>
                 <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
