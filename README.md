@@ -45,41 +45,8 @@ public function registerBundles()
 
 ## Configuration in Symfony 3
 
-If you do not explicitly configure this bundle, an HTMLPurifier service will be
-defined as `exercise_html_purifier.default`. This behavior is the same as if you
-had specified the following configuration:
-
-```yaml
-# app/config.yml
-
-exercise_html_purifier:
-    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
-```
-
-The `default` profile is special in that it is used as the configuration for the
-`exercise_html_purifier.default` service as well as the base configuration for
-other profiles you might define.
-
-```yaml
-# app/config.yml
-
-exercise_html_purifier:
-    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
-    html_profiles:
-        custom:
-            config:
-                Core.Encoding: 'ISO-8859-1'
-```
-
-In this example, a `exercise_html_purifier.custom` service will also be defined,
-which includes both the cache and encoding options. Available configuration
-options may be found in HTMLPurifier's [configuration documentation][].
-
-**Note:** If you define a `default` profile but omit `Cache.SerializerPath`, it
-will still default to the path above. You can specify a value of `null` for the
-option to suppress the default path.
-
-  [configuration documentation]: http://htmlpurifier.org/live/configdoc/plain.html
+The configuration is the same as the following section, but the path should be
+`app/config.yml` instead.
 
 ## Configuration in Symfony 4 and up
 
@@ -103,23 +70,29 @@ configuration.
 # config/packages/exercise_html_purifier.yaml
 
 exercise_html_purifier:
-    default_cache_serializer_path: 'tmp/htmlpurifier'
+    default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
     html_profiles:
-        default:
-            config:
-                Cache.SerializerPermissions: 777 
         custom:
             config:
                 Core.Encoding: 'ISO-8859-1'
 ```
+
+In this example, a `exercise_html_purifier.custom` service will also be defined,
+which includes both the cache and encoding options. Available configuration
+options may be found in HTMLPurifier's [configuration documentation][].
+
+**Note:** If you define a `default` profile but omit `Cache.SerializerPath`, it
+will still default to the path above. You can specify a value of `null` for the
+option to suppress the default path.
+
+  [configuration documentation]: http://htmlpurifier.org/live/configdoc/plain.html
 
 ## Autowiring
 
 By default type hinting `\HtmlPurifier` in your services will autowire
 the `exercise_html_purifier.default` service.
 To override it and use your own config as default autowired services just add
-this in you `app/config/services.yml` in you use symfony 3 or `config/services.yaml`
-if you use symfony 4:
+this configuration:
 
 ```yaml
 # config/services.yaml
@@ -131,7 +104,8 @@ services:
 
 ### Using a custom purifier class as default
 
-If you want to use your own class as default purifier, define a new alias:
+If you want to use your own class as default purifier, define the new alias as
+below:
 
 ```yaml
 # config/services.yaml
@@ -141,10 +115,7 @@ services:
     exercise_html_purifier.default: '@App\Html\CustomHtmlPurifier'
 ```
 
-In such case, the custom purifier will use its own defined configuration,
-ignoring the bundle configuration.
-
-### Argument binding
+### Argument binding (Symfony >= 4.4)
 
 The bundle also leverages the alias argument binding for each profile. So the
 following config:
@@ -170,11 +141,10 @@ public function __construct(\HTMLPurifier $galleryPurifier) {} // gallery config
 ## Form Type Extension
 
 This bundles provides a form type extension for filtering form fields with
-HTMLPurifier. Purification is done during the PRE_SUBMIT event, which
-means that client data will be filtered before binding to the form.
+HTMLPurifier. Purification is done early during the PRE_SUBMIT event, which
+means that client data will be filtered before being bound to the form.
 
-The following example demonstrates one possible way to integrate an HTMLPurifier
-transformer into a form by way of a custom field type:
+Two options are automatically available in all `TextType` based types:
 
 ```php
 <?php
@@ -213,7 +183,7 @@ This bundles registers a `purify` filter with Twig. Output from this filter is
 marked safe for HTML, much like Twig's built-in escapers. The filter may be used
 as follows:
 
-``` jinja
+```twig
 {# Filters text's value through the "default" HTMLPurifier service #}
 {{ text|purify }}
 
@@ -252,7 +222,7 @@ $builder
     // ...
 ```
 
-```jinja
+```twig
 {# in a template #}
 {{ html_string|purify('custom') }}
 ```
