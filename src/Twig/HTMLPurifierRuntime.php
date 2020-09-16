@@ -18,7 +18,7 @@ class HTMLPurifierRuntime implements RuntimeExtensionInterface
      * Filters the input through an \HTMLPurifier service.
      *
      * @param string|null $string  The html string to purify
-     * @param string $profile A configuration profile name
+     * @param string      $profile A configuration profile name
      *
      * @return string The purified html string
      */
@@ -27,7 +27,7 @@ class HTMLPurifierRuntime implements RuntimeExtensionInterface
         if (null === $string) {
             return '';
         }
-        
+
         return $this->getHTMLPurifierForProfile($profile)->purify($string);
     }
 
