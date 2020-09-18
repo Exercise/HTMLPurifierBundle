@@ -17,13 +17,17 @@ class HTMLPurifierRuntime implements RuntimeExtensionInterface
     /**
      * Filters the input through an \HTMLPurifier service.
      *
-     * @param string $string  The html string to purify
-     * @param string $profile A configuration profile name
+     * @param string|null $string  The html string to purify
+     * @param string      $profile A configuration profile name
      *
      * @return string The purified html string
      */
-    public function purify(string $string, string $profile = 'default'): string
+    public function purify(?string $string, string $profile = 'default'): string
     {
+        if (null === $string) {
+            return '';
+        }
+
         return $this->getHTMLPurifierForProfile($profile)->purify($string);
     }
 
