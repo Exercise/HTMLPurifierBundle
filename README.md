@@ -75,10 +75,12 @@ exercise_html_purifier:
         custom:
             config:
                 Core.Encoding: 'ISO-8859-1'
+                HTML.Allowed: 'a[href|target],p,br'
+                Attr.AllowedFrameTargets: '_blank'
 ```
 
 In this example, a `exercise_html_purifier.custom` service will also be defined,
-which includes both the cache and encoding options. Available configuration
+which includes cache, encoding, HTML tags and attributes options. Available configuration
 options may be found in HTMLPurifier's [configuration documentation][].
 
 **Note:** If you define a `default` profile but omit `Cache.SerializerPath`, it
