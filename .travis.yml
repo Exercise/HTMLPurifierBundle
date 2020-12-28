@@ -45,6 +45,7 @@ jobs:
           php: 7.4
           before_script:
             - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{.disabled,}
+            - echo "xdebug.mode = coverage" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
             - if [[ ! $(php -m | grep -si xdebug) ]]; then echo "xdebug required for coverage"; exit 1; fi
           script:
             - ./vendor/bin/simple-phpunit -v --coverage-text
