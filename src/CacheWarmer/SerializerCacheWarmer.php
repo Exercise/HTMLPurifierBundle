@@ -41,7 +41,7 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): array
     {
         foreach ($this->paths as $path) {
             $this->filesystem->remove($path); // clean previous cache
