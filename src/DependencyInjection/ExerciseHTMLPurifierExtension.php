@@ -87,7 +87,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         ;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'exercise_html_purifier';
     }

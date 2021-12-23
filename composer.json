@@ -14,14 +14,14 @@
     "require": {
         "php": "^7.1.3 || ^8.0.0",
         "ezyang/htmlpurifier": "~4.0",
-        "symfony/config": "~3.4 || ~4.0 || ^5.0",
-        "symfony/dependency-injection": "~3.4.1 || ^4.0.1 || ^5.0",
-        "symfony/http-kernel": "~3.4.1 || ^4.0.1 || ^5.0"
+        "symfony/config": "~3.4 || ~4.0 || ^5.0 || ^6.0",
+        "symfony/dependency-injection": "~3.4.1 || ^4.0.1 || ^5.0 || ^6.0",
+        "symfony/http-kernel": "~3.4.1 || ^4.0.1 || ^5.0 || ^6.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.0",
-        "symfony/form": "~3.4.1 || ^4.0.1 || ^5.0",
-        "symfony/phpunit-bridge": "4.4.*",
+        "symfony/form": "~3.4.1 || ^4.0.1 || ^5.0 || ^6.0",
+        "symfony/phpunit-bridge": "4.4.* || ^5.0 || ^6.0",
         "twig/twig": "^1.35.0 || ^2.4.4 || ^3.0"
     },
     "autoload": {
