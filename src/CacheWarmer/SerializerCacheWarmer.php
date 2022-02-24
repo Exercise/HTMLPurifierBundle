@@ -52,6 +52,8 @@ class SerializerCacheWarmer implements CacheWarmerInterface
             // Will build the configuration
             $this->registry->get($profile)->purify("<div style=\"background:url('http://www.example.com/x.gif');\">");
         }
+        
+        return [];
     }
 
     /**
