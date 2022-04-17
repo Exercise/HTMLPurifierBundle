@@ -28,7 +28,7 @@ class SerializerCacheWarmerTest extends TestCase
         $this->assertFalse($fs->exists($path));
 
         $cacheWarmer = new SerializerCacheWarmer([$path], [], $this->createMock(HTMLPurifiersRegistryInterface::class), $fs);
-        $cacheWarmer->warmUp(null);
+        $cacheWarmer->warmUp('');
 
         $this->assertTrue($fs->exists($path));
 
@@ -57,6 +57,6 @@ class SerializerCacheWarmerTest extends TestCase
         ;
 
         $cacheWarmer = new SerializerCacheWarmer([], ['first', 'second'], $registry, new Filesystem());
-        $cacheWarmer->warmUp(null);
+        $cacheWarmer->warmUp('');
     }
 }

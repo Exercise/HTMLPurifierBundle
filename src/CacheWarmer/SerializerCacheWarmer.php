@@ -41,7 +41,7 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir): array
     {
         foreach ($this->paths as $path) {
             $this->filesystem->remove($path); // clean previous cache
@@ -52,12 +52,14 @@ class SerializerCacheWarmer implements CacheWarmerInterface
             // Will build the configuration
             $this->registry->get($profile)->purify("<div style=\"background:url('http://www.example.com/x.gif');\">");
         }
+
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return false;
     }
