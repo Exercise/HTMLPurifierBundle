@@ -19,7 +19,7 @@
         "symfony/http-kernel": "^4.4 || ^5.0 || ^6.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "symfony/form": "^4.4 || ^5.0 || ^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "twig/twig": "^1.35.0 || ^2.4.4 || ^3.0"

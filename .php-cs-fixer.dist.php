@@ -1,11 +1,11 @@
 <?php
   
-$finder = PhpCsFixer\Finder::create()
+$finder = (new PhpCsFixer\Finder())
     ->exclude('Resources')
     ->in(__DIR__)
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
     ])
