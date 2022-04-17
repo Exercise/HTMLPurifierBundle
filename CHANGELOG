@@ -1,3 +1,9 @@
+## Version 4.0 (04/2022)
+
+ * [BC Break] Drop support for Symfony < 4.4
+ * add support for Symfony 6.x
+ * add support for PHPUnit 10.x
+
 ## Version 3.0 (12/2019)
 
  * [BC break] Dropped support for PHP 5.x. PHP 7.1 minimum required.
