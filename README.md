@@ -11,44 +11,13 @@ This bundle integrates [HTMLPurifier][] into Symfony.
 
 ## Installation
 
-## Symfony 3.4 and above (using Composer)
-
-Require the bundle in your composer.json file:
-
-```json
-{
-    "require": {
-        "exercise/htmlpurifier-bundle": "*"
-    }
-}
-```
-
 Install the bundle:
 
 ```bash
 $ composer require exercise/htmlpurifier-bundle
 ```
 
-Register the bundle in Symfony 3:
-
-```php
-// app/AppKernel.php
-
-public function registerBundles()
-{
-    return [
-        // ...
-        new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
-    ];
-}
-```
-
-## Configuration in Symfony 3
-
-The configuration is the same as the following section, but the path should be
-`app/config.yml` instead.
-
-## Configuration in Symfony 4 and up
+## Configuration
 
 If you do not explicitly configure this bundle, an HTMLPurifier service will be
 defined as `exercise_html_purifier.default`. This behavior is the same as if you
@@ -117,7 +86,7 @@ services:
     exercise_html_purifier.default: '@App\Html\CustomHtmlPurifier'
 ```
 
-### Argument binding (Symfony >= 4.4)
+### Argument binding
 
 The bundle also leverages the alias argument binding for each profile. So the
 following config:
@@ -353,5 +322,5 @@ previous, and "all" could define its own rules too.
 
 ## Contributing
 
-PRs are welcomed :). Please target the `2.0` branch for bug fixes and `master`
+PRs are welcomed :). Please target the `3.x` branch for bug fixes and `master`
 for new features.
