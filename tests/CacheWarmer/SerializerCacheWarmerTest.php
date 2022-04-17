@@ -45,15 +45,8 @@ class SerializerCacheWarmerTest extends TestCase
         $registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
         $registry->expects($this->exactly(2))
             ->method('get')
+            ->withConsecutive(['first'], ['second'])
             ->willReturn($purifier)
-        ;
-        $registry->expects($this->at(0))
-            ->method('get')
-            ->with('first')
-        ;
-        $registry->expects($this->at(1))
-            ->method('get')
-            ->with('second')
         ;
 
         $cacheWarmer = new SerializerCacheWarmer([], ['first', 'second'], $registry, new Filesystem());
