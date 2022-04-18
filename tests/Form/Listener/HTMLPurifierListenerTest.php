@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormInterface;
 
 class HTMLPurifierListenerTest extends TestCase
 {
-    public function testPurify()
+    public function testPurify(): void
     {
         $input = 'text';
         $purifiedInput = '<p>text</p>';
@@ -41,7 +41,7 @@ class HTMLPurifierListenerTest extends TestCase
         $this->assertSame($purifiedInput, $event->getData());
     }
 
-    public function testPurifyTrimEmptyValues()
+    public function testPurifyTrimEmptyValues(): void
     {
         $input = ' ';
         $trimmedInput = '';
@@ -69,8 +69,10 @@ class HTMLPurifierListenerTest extends TestCase
 
     /**
      * @dataProvider provideInvalidInput
+     *
+     * @param mixed $input
      */
-    public function testPurifyDoNothingForEmptyOrNonScalarData($input)
+    public function testPurifyDoNothingForEmptyOrNonScalarData($input): void
     {
         $registry = $this->createMock(HTMLPurifiersRegistryInterface::class);
         $registry
@@ -101,6 +103,9 @@ class HTMLPurifierListenerTest extends TestCase
         yield [new \stdClass()];
     }
 
+    /**
+     * @param mixed $data
+     */
     private function getFormEvent($data): FormEvent
     {
         return new FormEvent($this->createMock(FormInterface::class), $data);

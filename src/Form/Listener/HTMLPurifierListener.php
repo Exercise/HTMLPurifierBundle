@@ -25,7 +25,7 @@ class HTMLPurifierListener implements EventSubscriberInterface
             return; // because we don't want to handle it here
         }
 
-        if (0 === strlen($submittedData = trim($data))) {
+        if (0 === strlen($submittedData = trim((string) $data))) {
             if ($submittedData !== $data) {
                 $event->setData($submittedData);
             }

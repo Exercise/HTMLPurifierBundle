@@ -3,12 +3,15 @@
 namespace Exercise\HTMLPurifierBundle\Tests;
 
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
 class HTMLPurifiersRegistryTest extends TestCase
 {
+    /** @var MockObject|ContainerInterface|null */
     private $locator;
+    /** @var HTMLPurifiersRegistry|null */
     private $registry;
 
     protected function setUp(): void
@@ -32,7 +35,7 @@ class HTMLPurifiersRegistryTest extends TestCase
     /**
      * @dataProvider provideProfiles
      */
-    public function testHas($profile)
+    public function testHas(string $profile): void
     {
         $this->locator->expects($this->once())
             ->method('has')
@@ -46,7 +49,7 @@ class HTMLPurifiersRegistryTest extends TestCase
     /**
      * @dataProvider provideProfiles
      */
-    public function testHasNot($profile)
+    public function testHasNot(string $profile): void
     {
         $this->locator->expects($this->once())
             ->method('has')
@@ -60,7 +63,7 @@ class HTMLPurifiersRegistryTest extends TestCase
     /**
      * @dataProvider provideProfiles
      */
-    public function testGet($profile)
+    public function testGet(string $profile): void
     {
         $purifier = $this->createMock(\HTMLPurifier::class);
 
