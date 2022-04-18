@@ -8,6 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class HTMLPurifierConfigFactoryTest extends TestCase
 {
+    /** @var string */
     private static $cacheDir;
 
     public static function setUpBeforeClass(): void
@@ -21,14 +22,14 @@ class HTMLPurifierConfigFactoryTest extends TestCase
         (new Filesystem())->remove(self::$cacheDir);
     }
 
-    public function testCreateUseDoesNotBuildDefinitionByDefault()
+    public function testCreateUseDoesNotBuildDefinitionByDefault(): void
     {
         TestHTMLPurifierConfigFactory::create('default', []);
 
         $this->assertSame(0, TestHTMLPurifierConfigFactory::$calledBuild);
     }
 
-    public function testCreateUseSerializedCache()
+    public function testCreateUseSerializedCache(): void
     {
         $configArgs = [
             'test', /* profile */
@@ -53,10 +54,11 @@ class HTMLPurifierConfigFactoryTest extends TestCase
 
 class TestHTMLPurifierConfigFactory extends HTMLPurifierConfigFactory
 {
+    /** @var int */
     public static $calledBuild = 0;
 
     public static function buildHTMLDefinition(
-        \HTMLPurifier_Definition $def,
+        \HTMLPurifier_HTMLDefinition $def,
         array $attributes,
         array $elements,
         array $blankElements

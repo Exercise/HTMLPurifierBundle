@@ -11,7 +11,7 @@ class HTMLPurifierRuntimeTest extends TestCase
     /**
      * @dataProvider providePurifierProfiles
      */
-    public function testPurifyFilter($profile)
+    public function testPurifyFilter(string $profile): void
     {
         $input = 'text';
         $purifiedInput = '<p>text</p>';

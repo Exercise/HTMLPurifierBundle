@@ -62,7 +62,7 @@ class HTMLPurifierConfigFactory
      * This build should never happen on runtime, since purifiers cache should
      * be generated during warm up.
      */
-    public static function buildHTMLDefinition(\HTMLPurifier_Definition $def, array $attributes, array $elements, array $blankElements): void
+    public static function buildHTMLDefinition(\HTMLPurifier_HTMLDefinition $def, array $attributes, array $elements, array $blankElements): void
     {
         foreach ($attributes as $elementName => $rule) {
             foreach ($rule as $attributeName => $definition) {

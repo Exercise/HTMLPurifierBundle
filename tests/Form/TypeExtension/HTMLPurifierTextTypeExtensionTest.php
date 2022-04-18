@@ -5,6 +5,7 @@ namespace Exercise\HTMLPurifierBundle\Tests\Form\TypeExtension;
 use Exercise\HTMLPurifierBundle\Form\Listener\HTMLPurifierListener;
 use Exercise\HTMLPurifierBundle\Form\TypeExtension\HTMLPurifierTextTypeExtension;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
 {
+    /** @var HTMLPurifiersRegistryInterface|MockObject|null */
     private $registry;
 
     protected function setUp(): void
@@ -29,14 +31,14 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->registry = null;
     }
 
-    protected function getTypeExtensions()
+    protected function getTypeExtensions(): array
     {
         return [
             new HTMLPurifierTextTypeExtension($this->registry),
         ];
     }
 
-    public function testDefaultOptions()
+    public function testDefaultOptions(): void
     {
         $this->registry
             ->expects($this->never())
@@ -56,7 +58,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->assertFalse($this->hasPurifierListener($form));
     }
 
-    public function testPurifyOptionsNeedDefaultProfile()
+    public function testPurifyOptionsNeedDefaultProfile(): void
     {
         $this->registry
             ->expects($this->once())
@@ -75,7 +77,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->factory->create(TextType::class, null, ['purify_html' => true]);
     }
 
-    public function testDefaultOptionsWhenPurifyIsTrue()
+    public function testDefaultOptionsWhenPurifyIsTrue(): void
     {
         $this->registry
             ->expects($this->once())
@@ -93,7 +95,7 @@ class HTMLPurifierTextTypeExtensionTest extends FormIntegrationTestCase
         $this->assertTrue($this->hasPurifierListener($form));
     }
 
-    public function testInvalidProfile()
+    public function testInvalidProfile(): void
     {
         $this->registry
             ->expects($this->once())

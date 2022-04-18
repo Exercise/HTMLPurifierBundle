@@ -14,7 +14,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ExerciseHTMLPurifierExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container)
+    /**
+     * {@inheritdoc}
+     */
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
@@ -87,7 +90,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         ;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'exercise_html_purifier';
     }

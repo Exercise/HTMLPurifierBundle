@@ -25,7 +25,7 @@ class HTMLPurifierListener implements EventSubscriberInterface
             return; // because we don't want to handle it here
         }
 
-        if (0 === strlen($submittedData = trim($data))) {
+        if (0 === strlen($submittedData = trim((string) $data))) {
             if ($submittedData !== $data) {
                 $event->setData($submittedData);
             }
@@ -39,7 +39,7 @@ class HTMLPurifierListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             FormEvents::PRE_SUBMIT => ['purifySubmittedData', /* as soon as possible */ 1000000],

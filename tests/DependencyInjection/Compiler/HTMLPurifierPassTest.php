@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class HTMLPurifierPassTest extends TestCase
 {
-    /** @var ContainerBuilder|MockObject */
+    /** @var ContainerBuilder|MockObject|null */
     private $container;
 
     protected function setUp(): void
@@ -34,7 +34,7 @@ class HTMLPurifierPassTest extends TestCase
         $this->container = null;
     }
 
-    public function testProcessOnlyIfRegistryInterfaceIsDefined()
+    public function testProcessOnlyIfRegistryInterfaceIsDefined(): void
     {
         $this->container->expects($this->once())
             ->method('hasAlias')
@@ -50,7 +50,7 @@ class HTMLPurifierPassTest extends TestCase
         $pass->process($this->container);
     }
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $container = new ContainerBuilder();
         $purifier = $container->register(DummyPurifier::class)
@@ -71,7 +71,7 @@ class HTMLPurifierPassTest extends TestCase
         $this->assertSame(DummyPurifier::class, (string) $map['test']->getValues()[0]);
     }
 
-    public function testProcessDoNothingIfRegistryIsNotDefined()
+    public function testProcessDoNothingIfRegistryIsNotDefined(): void
     {
         $this->container
             ->expects($this->once())
@@ -94,7 +94,7 @@ class HTMLPurifierPassTest extends TestCase
         $pass->process($this->container);
     }
 
-    public function testProcessFailsIfTaggedServiceMissesProfileName()
+    public function testProcessFailsIfTaggedServiceMissesProfileName(): void
     {
         $container = new ContainerBuilder();
         $container->register(DummyPurifier::class)

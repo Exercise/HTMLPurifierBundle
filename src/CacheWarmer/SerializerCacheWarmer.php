@@ -26,9 +26,8 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     private $filesystem;
 
     /**
-     * @param string[]                       $paths
-     * @param string[]                       $profiles
-     * @param HTMLPurifiersRegistryInterface $registry Used to build cache within bundle runtime
+     * @param string[] $paths
+     * @param string[] $profiles
      */
     public function __construct(array $paths, array $profiles, HTMLPurifiersRegistryInterface $registry, Filesystem $filesystem)
     {
@@ -41,7 +40,7 @@ class SerializerCacheWarmer implements CacheWarmerInterface
     /**
      * {@inheritdoc}
      */
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir): array
     {
         foreach ($this->paths as $path) {
             $this->filesystem->remove($path); // clean previous cache
@@ -52,12 +51,14 @@ class SerializerCacheWarmer implements CacheWarmerInterface
             // Will build the configuration
             $this->registry->get($profile)->purify("<div style=\"background:url('http://www.example.com/x.gif');\">");
         }
+
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return false;
     }

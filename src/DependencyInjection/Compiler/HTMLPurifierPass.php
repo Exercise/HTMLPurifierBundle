@@ -12,12 +12,12 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class HTMLPurifierPass implements CompilerPassInterface
 {
-    const PURIFIER_TAG = 'exercise.html_purifier';
+    public const PURIFIER_TAG = 'exercise.html_purifier';
 
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasAlias(HTMLPurifiersRegistryInterface::class)) {
             return;

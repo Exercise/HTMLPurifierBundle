@@ -17,17 +17,17 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
     private const DEFAULT_CACHE_PATH = '%kernel.cache_dir%/htmlpurifier';
 
     /**
-     * @var ContainerBuilder
+     * @var ContainerBuilder|null
      */
     private $container;
 
     /**
-     * @var ExerciseHTMLPurifierExtension
+     * @var ExerciseHTMLPurifierExtension|null
      */
     private $extension;
 
     /**
-     * @var array
+     * @var array|null
      */
     private $defaultConfig;
 
@@ -48,7 +48,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->container = null;
     }
 
-    public function testShouldLoadDefaultConfiguration()
+    public function testShouldLoadDefaultConfiguration(): void
     {
         $this->extension->load([], $this->container);
 
@@ -57,7 +57,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles(['default']);
     }
 
-    public function testInvalidParent()
+    public function testInvalidParent(): void
     {
         $config = [
             'html_profiles' => [
@@ -80,12 +80,12 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
     /**
      * @dataProvider provideInvalidElementDefinitions
      */
-    public function testInvalidElements(array $elementDefinition)
+    public function testInvalidElements(array $elementDefinition): void
     {
         $config = [
             'html_profiles' => [
                 'default' => [
-                    'elements' => ['a' => []],
+                    'elements' => ['a' => $elementDefinition],
                 ],
             ],
         ];
@@ -104,7 +104,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         yield 'too many arguments' => [['', '', '', [], [], 'extra argument']];
     }
 
-    public function testShouldAllowOverridingDefaultConfigurationCacheSerializerPath()
+    public function testShouldAllowOverridingDefaultConfigurationCacheSerializerPath(): void
     {
         $config = [
             'default_cache_serializer_path' => null,
@@ -126,7 +126,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles(['default']);
     }
 
-    public function testShouldNotDeepMergeOptions()
+    public function testShouldNotDeepMergeOptions(): void
     {
         $configs = [
             ['html_profiles' => [
@@ -154,7 +154,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles(['default']);
     }
 
-    public function testShouldLoadCustomConfiguration()
+    public function testShouldLoadCustomConfiguration(): void
     {
         $config = [
             'html_profiles' => [
@@ -195,7 +195,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles($profiles);
     }
 
-    public function testShouldLoadComplexCustomConfiguration()
+    public function testShouldLoadComplexCustomConfiguration(): void
     {
         $defaultConfig = [
             'AutoFormat.AutoParagraph' => true,
@@ -288,7 +288,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles($profiles);
     }
 
-    public function testShouldRegisterAliases()
+    public function testShouldRegisterAliases(): void
     {
         if (!method_exists($this->container, 'registerAliasForArgument')) {
             $this->markTestSkipped('Alias arguments binding is not available.');
@@ -373,10 +373,8 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
     /**
      * Asserts that the named config definition extends the default profile and
      * loads the given options.
-     *
-     * @param string $name
      */
-    private function assertConfigDefinition($name, array $config, array $parents = [], array $attributes = [], array $elements = [], array $blankElements = [])
+    private function assertConfigDefinition(string $name, array $config, array $parents = [], array $attributes = [], array $elements = [], array $blankElements = []): void
     {
         $this->assertTrue($this->container->hasDefinition('exercise_html_purifier.config.'.$name));
 

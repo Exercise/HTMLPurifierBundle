@@ -10,7 +10,7 @@ class HTMLPurifierExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('purify', [HTMLPurifierRuntime::class, 'purify'], ['is_safe' => ['html']]),
