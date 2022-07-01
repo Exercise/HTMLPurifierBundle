@@ -27,6 +27,7 @@ class ExerciseHTMLPurifierExtension extends Extension
 
         // Set default serializer cache path, while ensuring a default profile is defined
         $configs['html_profiles']['default']['config']['Cache.SerializerPath'] = $configs['default_cache_serializer_path'];
+        $configs['html_profiles']['default']['config']['Cache.SerializerPermissions'] = $configs['default_cache_serializer_permissions'];
 
         $serializerPaths = [];
         // Drop when require Symfony > 3.4

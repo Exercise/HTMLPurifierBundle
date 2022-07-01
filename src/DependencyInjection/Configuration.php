@@ -21,6 +21,10 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_cache_serializer_path')
                     ->defaultValue('%kernel.cache_dir%/htmlpurifier')
                 ->end()
+                ->scalarNode('default_cache_serializer_permissions')
+                    // (format "%#o" 493) "0755"
+                    ->defaultValue(493)
+                ->end()
                 ->arrayNode('html_profiles')
                     ->useAttributeAsKey('name')
                     ->normalizeKeys(false)

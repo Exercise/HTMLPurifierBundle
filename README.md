@@ -28,6 +28,8 @@ had specified the following configuration:
 
 exercise_html_purifier:
     default_cache_serializer_path: '%kernel.cache_dir%/htmlpurifier'
+    # 493 int => ocl "0755"
+    default_cache_serializer_permissions: 493
 ```
 
 The `default` profile is special, it is *always* defined and its configuration

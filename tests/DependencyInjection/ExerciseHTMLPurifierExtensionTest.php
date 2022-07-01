@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ExerciseHTMLPurifierExtensionTest extends TestCase
 {
     private const DEFAULT_CACHE_PATH = '%kernel.cache_dir%/htmlpurifier';
+    private const DEFAULT_CACHE_PERMISSIONS = 493;
 
     /**
      * @var ContainerBuilder|null
@@ -38,6 +39,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->extension = new ExerciseHTMLPurifierExtension();
         $this->defaultConfig = [
             'Cache.SerializerPath' => self::DEFAULT_CACHE_PATH,
+            'Cache.SerializerPermissions' => self::DEFAULT_CACHE_PERMISSIONS,
         ];
     }
 
@@ -121,6 +123,31 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
 
         $this->assertDefaultConfigDefinition(array_merge($config['html_profiles']['default']['config'], [
             'Cache.SerializerPath' => null,
+            'Cache.SerializerPermissions' => 493,
+        ]));
+        $this->assertCacheWarmerSerializerArgs([], ['default']);
+        $this->assertRegistryHasProfiles(['default']);
+    }
+
+    public function testShouldAllowOverridingDefaultConfigurationCacheSerializerPermissions(): void
+    {
+        $config = [
+            'default_cache_serializer_path' => null,
+            'default_cache_serializer_permissions' => 511,
+            'html_profiles'                 => [
+                'default' => [
+                    'config' => [
+                        'AutoFormat.AutoParagraph' => true,
+                    ],
+                ],
+            ],
+        ];
+
+        $this->extension->load([$config], $this->container);
+
+        $this->assertDefaultConfigDefinition(array_merge($config['html_profiles']['default']['config'], [
+            'Cache.SerializerPath' => null,
+            'Cache.SerializerPermissions' => 511,
         ]));
         $this->assertCacheWarmerSerializerArgs([], ['default']);
         $this->assertRegistryHasProfiles(['default']);
