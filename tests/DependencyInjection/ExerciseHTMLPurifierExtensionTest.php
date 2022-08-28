@@ -134,7 +134,7 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $config = [
             'default_cache_serializer_path' => null,
             'default_cache_serializer_permissions' => 511,
-            'html_profiles'                 => [
+            'html_profiles' => [
                 'default' => [
                     'config' => [
                         'AutoFormat.AutoParagraph' => true,
