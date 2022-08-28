@@ -1,3 +1,7 @@
+## Version 4.1 (08/2022)
+
+ * Add support of the `Cache.SerializerPermissions` for default profile
+
 ## Version 4.0 (04/2022)
 
  * [BC Break] Drop support for Symfony < 4.4
