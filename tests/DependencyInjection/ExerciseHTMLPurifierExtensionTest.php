@@ -153,6 +153,30 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         $this->assertRegistryHasProfiles(['default']);
     }
 
+    public function testShouldAllowOverridingDefaultConfigurationCacheSerializerPermissionsOnDefaultProfile(): void
+    {
+        $config = [
+            'default_cache_serializer_path' => null,
+            'html_profiles' => [
+                'default' => [
+                    'config' => [
+                        'AutoFormat.AutoParagraph' => true,
+                        'Cache.SerializerPermissions' => 511,
+                    ],
+                ],
+            ],
+        ];
+
+        $this->extension->load([$config], $this->container);
+
+        $this->assertDefaultConfigDefinition(array_merge($config['html_profiles']['default']['config'], [
+            'Cache.SerializerPath' => null,
+            'Cache.SerializerPermissions' => 511,
+        ]));
+        $this->assertCacheWarmerSerializerArgs([], ['default']);
+        $this->assertRegistryHasProfiles(['default']);
+    }
+
     public function testShouldNotDeepMergeOptions(): void
     {
         $configs = [
