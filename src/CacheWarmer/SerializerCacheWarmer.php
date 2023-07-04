@@ -37,9 +37,6 @@ class SerializerCacheWarmer implements CacheWarmerInterface
         $this->filesystem = $filesystem;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function warmUp($cacheDir): array
     {
         foreach ($this->paths as $path) {
@@ -55,9 +52,6 @@ class SerializerCacheWarmer implements CacheWarmerInterface
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isOptional(): bool
     {
         return false;

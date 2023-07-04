@@ -20,17 +20,11 @@ class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
         $this->purifiersRegistry = $registry;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getExtendedTypes(): iterable
     {
         return [TextType::class];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -58,9 +52,6 @@ class HTMLPurifierTextTypeExtension extends AbstractTypeExtension
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['purify_html']) {

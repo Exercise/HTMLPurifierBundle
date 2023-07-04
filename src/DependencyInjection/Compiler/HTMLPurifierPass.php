@@ -14,9 +14,6 @@ class HTMLPurifierPass implements CompilerPassInterface
 {
     public const PURIFIER_TAG = 'exercise.html_purifier';
 
-    /**
-     * {@inheritdoc}
-     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasAlias(HTMLPurifiersRegistryInterface::class)) {
