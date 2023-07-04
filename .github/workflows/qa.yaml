@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.1', '8.1']
+        php-versions: ['7.4', '8.1', '8.2']
 
     steps:
       - name: Checkout
@@ -89,7 +89,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.1', '8.1']
+        php-versions: ['7.4', '8.1', '8.2']
 
     steps:
       - name: Checkout
