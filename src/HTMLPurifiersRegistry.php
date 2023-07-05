@@ -13,17 +13,11 @@ class HTMLPurifiersRegistry implements HTMLPurifiersRegistryInterface
         $this->purifiersLocator = $purifiersLocator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has(string $profile): bool
     {
         return $this->purifiersLocator->has($profile);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get(string $profile): \HTMLPurifier
     {
         return $this->purifiersLocator->get($profile);

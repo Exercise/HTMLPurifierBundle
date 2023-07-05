@@ -36,9 +36,6 @@ class HTMLPurifierListener implements EventSubscriberInterface
         $event->setData($this->getPurifier()->purify($submittedData));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

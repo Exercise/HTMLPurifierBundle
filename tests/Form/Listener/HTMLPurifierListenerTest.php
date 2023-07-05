@@ -69,8 +69,6 @@ class HTMLPurifierListenerTest extends TestCase
 
     /**
      * @dataProvider provideInvalidInput
-     *
-     * @param mixed $input
      */
     public function testPurifyDoNothingForEmptyOrNonScalarData($input): void
     {
@@ -103,9 +101,6 @@ class HTMLPurifierListenerTest extends TestCase
         yield [new \stdClass()];
     }
 
-    /**
-     * @param mixed $data
-     */
     private function getFormEvent($data): FormEvent
     {
         return new FormEvent($this->createMock(FormInterface::class), $data);

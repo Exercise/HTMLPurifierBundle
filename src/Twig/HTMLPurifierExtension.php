@@ -7,9 +7,6 @@ use Twig\TwigFilter;
 
 class HTMLPurifierExtension extends AbstractExtension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getFilters(): array
     {
         return [

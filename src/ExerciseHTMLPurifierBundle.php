@@ -8,9 +8,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ExerciseHTMLPurifierBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new HTMLPurifierPass());
