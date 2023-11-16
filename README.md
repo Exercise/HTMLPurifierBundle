@@ -324,5 +324,5 @@ previous, and "all" could define its own rules too.
 
 ## Contributing
 
-PRs are welcomed :). Please target the `3.x` branch for bug fixes and `master`
+PRs are welcomed :). Please target the `4.x` branch for bug fixes and `master`
 for new features.
