@@ -5,59 +5,14 @@ on:
   pull_request:
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        php-versions: ['7.1', '8.1']
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup PHP, extensions and composer with shivammathur/setup-php
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, iconv, json, mbstring, pdo
-        env:
-          update: true
-
-      - name: Validate composer.json
-        run: composer validate --strict
-
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Install Lowest Composer dependencies
-        if: "matrix.php-versions < '8.1'"
-        run: composer update --prefer-lowest --no-progress --prefer-dist --optimize-autoloader
-
-      - name: Install PHPUnit
-        run: vendor/bin/simple-phpunit install
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-          php-version: ${{ matrix.php-versions }}
-
   qa:
     name: Quality
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['8.1']
+        php-versions:
+          - 8.2
 
     steps:
       - name: Checkout
@@ -68,28 +23,38 @@ jobs:
         with:
           php-version: ${{ matrix.php-versions }}
           extensions: mbstring, xml, ctype, intl, dom, filter
-          tools: symfony
         env:
           update: true
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
       - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        run: composer install --working-dir=qa/php-cs-fixer
 
       - name: PHP-CS-Fixer
-        run: symfony php ./vendor/bin/php-cs-fixer fix --dry-run --using-cache=no --verbose --diff
+        run: ./qa/php-cs-fixer/vendor/bin/php-cs-fixer fix --dry-run --using-cache=no --verbose --diff
 
   test:
     name: Tests
-    needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.1', '8.1']
+        php-versions:
+          - 8.1
+          - 8.2
+        symfony-versions:
+          - 5.4.*
+          - 6.3.*
+          - 6.4.*
+          - 7.0.*
+        dependencies:
+          - ''
+        include:
+          - php-versions: '8.1'
+            symfony-versions: '5.4.*'
+            dependencies: 'lowest'
+        exclude:
+          - php-versions: '8.1'
+            symfony-versions: '7.0.*'
 
     steps:
       - name: Checkout
@@ -99,21 +64,25 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: mbstring, xml, ctype, intl, dom, filter
-          tools: symfony
+          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+          tools: flex
         env:
           update: true
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - name: Install Composer
+        if: "matrix.dependencies == ''"
+        run: composer update --no-progress --ansi --prefer-stable
+        env:
+          SYMFONY_REQUIRE: ${{ matrix.symfony-versions }}
 
       - name: Install Lowest Composer dependencies
-        if: "matrix.php-versions < '8.1'"
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
+        if: "matrix.dependencies == 'lowest'"
+        run: composer update --no-progress --ansi --prefer-stable --prefer-lowest
+        env:
+          SYMFONY_REQUIRE: ${{ matrix.symfony-versions }}
+
+      - name: Validate composer
+        run: composer validate --strict --no-check-lock
 
       - name: Execute unit tests
-        run: symfony php ./vendor/bin/simple-phpunit
+        run: ./vendor/bin/simple-phpunit
