@@ -113,7 +113,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         $resolved[$parent]['blank_elements'] = $configs[$parent]['blank_elements'];
     }
 
-    private static function getResolvedConfig(string $parameter, array $parents, array $definition = null): array
+    private static function getResolvedConfig(string $parameter, array $parents, ?array $definition = null): array
     {
         if (null !== $definition) {
             return array_filter(array_merge(

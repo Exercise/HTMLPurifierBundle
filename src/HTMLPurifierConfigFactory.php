@@ -24,7 +24,7 @@ class HTMLPurifierConfigFactory
     public static function create(
         string $profile,
         array $configArray,
-        \HTMLPurifier_Config $defaultConfig = null,
+        ?\HTMLPurifier_Config $defaultConfig = null,
         array $parents = [],
         array $attributes = [],
         array $elements = [],

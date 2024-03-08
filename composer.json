@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "symfony/form": "^5.4 || ^6.0 || ^7.0",
-        "symfony/phpunit-bridge": "^7.0",
+        "symfony/phpunit-bridge": "^7.0.1",
         "twig/twig": "^2.4.4 || ^3.0"
     },
     "autoload": {
