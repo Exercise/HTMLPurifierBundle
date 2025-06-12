@@ -421,6 +421,46 @@ class ExerciseHTMLPurifierExtensionTest extends TestCase
         );
     }
 
+    public function testShouldResolveServices()
+    {
+        $config = [
+            'html_profiles' => [
+                'default' => [
+                    'config' => [
+                        'AutoFormat.Custom' => [
+                            '@'.MyCustomInjectorService::class,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->extension->load([$config], $this->container);
+        $this->container->register(MyCustomInjectorService::class);
+
+        $this->container->register(ServiceWithDefaultConfig::class)
+            ->setAutowired(true)
+            ->setPublic(true)
+        ;
+
+        $this->container->compile();
+
+        $defaultConfigArgument1 = $this->container
+            ->findDefinition(ServiceWithDefaultConfig::class)
+            ->getArgument(0)
+        ;
+
+        $this->assertInstanceOf(Definition::class, $defaultConfigArgument1);
+
+        /** @var Definition $htmlPurifierConfigDefinition */
+        $htmlPurifierConfigDefinition = $defaultConfigArgument1->getArgument(0);
+
+        $customInjectors = $htmlPurifierConfigDefinition->getArgument(1);
+        self::assertArrayHasKey('AutoFormat.Custom', $customInjectors);
+
+        $this->assertInstanceOf(Definition::class, $customInjectors['AutoFormat.Custom'][0]);
+    }
+
     /**
      * Asserts that the named config definition extends the default profile and
      * loads the given options.
@@ -513,4 +553,8 @@ class ServiceWithAdvancedConfig
     public function __construct(\HTMLPurifier $advancedPurifier)
     {
     }
+}
+
+class MyCustomInjectorService extends \HTMLPurifier_Injector
+{
 }

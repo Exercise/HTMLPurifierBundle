@@ -8,6 +8,7 @@ use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -21,6 +22,7 @@ class ExerciseHTMLPurifierExtension extends Extension
         $loader->load('html_purifier.xml');
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
+        $configs = array_map([$this, 'resolveServices'], $configs);
 
         // Set default serializer cache path, while ensuring a default profile is defined
         $configs['html_profiles']['default']['config']['Cache.SerializerPath'] = $configs['default_cache_serializer_path'];
@@ -123,5 +125,26 @@ class ExerciseHTMLPurifierExtension extends Extension
         }
 
         return array_filter(array_column($parents, $parameter));
+    }
+
+    private function resolveServices($value)
+    {
+        if (is_array($value)) {
+            return array_map([$this, 'resolveServices'], $value);
+        }
+
+        if (is_string($value) && 0 === strpos($value, '@')) {
+            if (0 === strpos($value, '@?')) {
+                $value = substr($value, 2);
+                $invalidBehavior = ContainerInterface::IGNORE_ON_INVALID_REFERENCE;
+            } else {
+                $value = substr($value, 1);
+                $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
+            }
+
+            return new Reference($value, $invalidBehavior);
+        }
+
+        return $value;
     }
 }
