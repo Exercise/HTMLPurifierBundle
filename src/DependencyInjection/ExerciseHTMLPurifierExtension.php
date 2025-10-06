@@ -8,17 +8,17 @@ use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistry;
 use Exercise\HTMLPurifierBundle\HTMLPurifiersRegistryInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ExerciseHTMLPurifierExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $loader->load('html_purifier.xml');
+        $loader->load('services.php');
 
         $configs = $this->processConfiguration(new Configuration(), $configs);
 
@@ -30,8 +30,6 @@ class ExerciseHTMLPurifierExtension extends Extension
         }
 
         $serializerPaths = [];
-        // Drop when require Symfony > 3.4
-        $registerAlias = method_exists($container, 'registerAliasForArgument');
 
         foreach ($configs['html_profiles'] as $name => $definition) {
             $configId = "exercise_html_purifier.config.$name";
@@ -71,7 +69,7 @@ class ExerciseHTMLPurifierExtension extends Extension
                 $serializerPaths[] = $definition['config']['Cache.SerializerPath'];
             }
 
-            if ($registerAlias && $default) {
+            if ($default) {
                 $container->registerAliasForArgument($id, \HTMLPurifier::class, "$name.purifier");
             }
         }

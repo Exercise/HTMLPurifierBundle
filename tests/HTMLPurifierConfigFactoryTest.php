@@ -61,7 +61,7 @@ class TestHTMLPurifierConfigFactory extends HTMLPurifierConfigFactory
         \HTMLPurifier_HTMLDefinition $def,
         array $attributes,
         array $elements,
-        array $blankElements
+        array $blankElements,
     ): void {
         ++self::$calledBuild;
         parent::buildHTMLDefinition($def, $attributes, $elements, $blankElements);
