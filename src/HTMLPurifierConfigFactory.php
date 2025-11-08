@@ -28,7 +28,7 @@ class HTMLPurifierConfigFactory
         array $parents = [],
         array $attributes = [],
         array $elements = [],
-        array $blankElements = []
+        array $blankElements = [],
     ): \HTMLPurifier_Config {
         if ($defaultConfig) {
             $config = \HTMLPurifier_Config::inherit($defaultConfig);
